@@ -2,7 +2,6 @@
 # Собирает mechta-prebuilt.tar.gz (backend node_modules + frontend dist) для download-prebuilt.bat
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-OUT="${1:-$ROOT/mechta-prebuilt.tar.gz}"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
@@ -30,5 +29,10 @@ docker run --rm -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" -v "$ROOT/frontend
   chown -R "$HOST_UID:$HOST_GID" /out
 '
 
-tar -czf "$OUT" -C "$WORK" backend frontend
+tar -czf "$WORK/archive.tar.gz" -C "$WORK" backend frontend
+NAME="mechta-prebuilt-$(sha256sum "$WORK/archive.tar.gz" | cut -c1-12).tar.gz"
+OUT="${1:-$ROOT}/$NAME"
+mv "$WORK/archive.tar.gz" "$OUT"
+printf '%s' "$NAME" > "$ROOT/prebuilt.txt"
 ls -lh "$OUT"
+echo "Загрузите: gh release upload images \"$OUT\" и закоммитьте prebuilt.txt"

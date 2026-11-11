@@ -55,5 +55,6 @@ Vite: http://localhost:5173 (запросы `/api` проксируются на
 
 ```
 ./scripts/make-prebuilt.sh
-gh release upload images mechta-prebuilt.tar.gz --clobber
+gh release upload images mechta-prebuilt-<hash>.tar.gz
+git add prebuilt.txt && git commit -m "Update prebuilt" && git push
 ```
