@@ -1,0 +1,7 @@
+# Готовая сборка dist из download-prebuilt.bat (собрана в облаке)
+FROM nginx:stable-alpine
+RUN rm -f /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY prebuilt/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

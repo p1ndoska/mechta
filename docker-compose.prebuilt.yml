@@ -1,0 +1,13 @@
+# Запуск из готовой сборки (download-prebuilt.bat): npm внутри Docker не нужен
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prebuilt
+      network: none
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prebuilt
+      network: none
