@@ -22,12 +22,13 @@ download-prebuilt.bat
 ```
 
 Скачивает собранные в облаке `node_modules` backend и `dist` frontend и запускает Docker.
+Дальше достаточно `docker compose up -d --build` — npm при этом не используется.
 
-## Запуск с полной сборкой в Docker
+## Запуск с полной сборкой в Docker (npm внутри Docker)
 
 ```
 copy .env.example .env
-docker compose up -d --build
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 ```
 
 Если npm падает с `self-signed certificate`, положите корневые сертификаты в `backend/certs/` и `frontend/certs/` или поставьте `NPM_STRICT_SSL=false` в `.env`.

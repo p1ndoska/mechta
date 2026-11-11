@@ -43,7 +43,7 @@ if errorlevel 1 (
 del "%FILE%"
 
 echo Запуск контейнеров...
-docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d --build
+docker compose up -d --build
 if errorlevel 1 exit /b 1
 
 echo.

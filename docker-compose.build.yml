@@ -1,0 +1,15 @@
+# Полная сборка с npm внутри Docker (нужен доступ к registry.npmjs.org)
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+      network: default
+      args:
+        NPM_STRICT_SSL: ${NPM_STRICT_SSL:-true}
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      network: default
+      args:
+        NPM_STRICT_SSL: ${NPM_STRICT_SSL:-true}
