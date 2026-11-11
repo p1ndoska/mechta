@@ -12,12 +12,12 @@ RUN sed -i 's/\r$//' /tmp/download-prisma-engines.sh && sh /tmp/download-prisma-
 ENV PRISMA_QUERY_ENGINE_LIBRARY=/opt/prisma-engines/libquery_engine-linux-musl-openssl-3.0.x.so.node
 ENV PRISMA_SCHEMA_ENGINE_BINARY=/opt/prisma-engines/schema-engine-linux-musl-openssl-3.0.x
 
-# Готовые node_modules из download-prebuilt.bat (собраны в облаке)
+# Готовые node_modules из download-prebuilt.bat (собраны в облаке, без .bin: Windows tar не создает симлинки)
 COPY package*.json ./
 COPY prebuilt/node_modules ./node_modules
 COPY prisma ./prisma
-RUN npx prisma generate
+RUN node node_modules/prisma/build/index.js generate
 COPY src ./src
 
 EXPOSE 3002
-CMD ["sh", "-c", "npx prisma migrate deploy && node src/index.js"]
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy && node src/index.js"]

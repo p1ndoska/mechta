@@ -11,7 +11,7 @@ docker run --rm -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" -v "$ROOT/backend:
   mkdir -p /build && cd /build
   cp /src/package.json /src/package-lock.json .
   npm ci --include=dev --ignore-scripts --no-audit --no-fund
-  rm -rf node_modules/@prisma/engines/dist/*.node node_modules/.cache
+  rm -rf node_modules/@prisma/engines/dist/*.node node_modules/.cache node_modules/.bin
   find node_modules -name "*.map" -delete
   find node_modules/prisma node_modules/@prisma/client -type f \
     \( -name "*mysql*" -o -name "*sqlite*" -o -name "*sqlserver*" -o -name "*cockroachdb*" -o -name "*react-native*" \) -delete
