@@ -13,7 +13,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  /* Фильтр фото: приглушённые цвета, затемнение и тёплый оттенок */
+  background: rgba(160, 60, 20, 0.1);
+  backdrop-filter: saturate(0.55) brightness(0.58);
 }
 
 .hero__content {
