@@ -45,8 +45,7 @@ function FlagRU() {
   );
 }
 
-export default function Header() {
-  const [lang, setLang] = useState('ru');
+export default function Header({ lang, setLang }) {
   const [logoVisible, setLogoVisible] = useState(true);
   const t = texts[lang];
 

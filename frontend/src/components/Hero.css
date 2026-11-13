@@ -1,0 +1,54 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 75vh;
+  padding: 60px 24px;
+  background: #3a3a3a url('/images/photos/photo_1_2026-09-02_11-00-40-2048x1536.jpg') center / cover no-repeat;
+  text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.hero__content {
+  position: relative;
+  max-width: 960px;
+}
+
+.hero__title {
+  margin: 0 0 20px;
+  font-size: clamp(24px, 2.4vw, 40px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: #efefc9;
+}
+
+.hero__text {
+  margin: 0 auto 32px;
+  max-width: 560px;
+  font-size: clamp(12px, 1vw, 15px);
+  line-height: 1.6;
+  color: #f1f1e4;
+}
+
+.hero__button {
+  display: inline-block;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: #5a5e27;
+  font-size: clamp(12px, 0.9vw, 14px);
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.hero__button:hover {
+  background: #6f742f;
+}
