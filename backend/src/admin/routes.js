@@ -62,6 +62,12 @@ router.post('/login', async (req, res) => {
   }
 
   fails.delete(ip);
+  if (auth.needsRehash(admin.passwordHash)) {
+    await prisma.admin.update({
+      where: { id: admin.id },
+      data: { passwordHash: await auth.hashPassword(password) },
+    });
+  }
   setCookie(res, await auth.createSession(admin.id), auth.SESSION_MS);
   res.json({ name: admin.name, role: admin.role });
 });
@@ -84,9 +90,8 @@ router.post('/password', requireAdmin, async (req, res) => {
   if (!(await auth.verifyPassword(currentPassword, req.admin.passwordHash))) {
     return res.status(400).json({ error: 'Текущий пароль неверный' });
   }
-  if (newPassword.length < 8) {
-    return res.status(400).json({ error: 'Новый пароль должен быть не короче 8 символов' });
-  }
+  const error = auth.passwordError(newPassword);
+  if (error) return res.status(400).json({ error });
   await prisma.admin.update({
     where: { id: req.admin.id },
     data: { passwordHash: await auth.hashPassword(newPassword) },
@@ -110,9 +115,8 @@ router.post('/users', requireAdmin, requireRoleAdmin, async (req, res) => {
       .status(400)
       .json({ error: 'Имя: от 3 до 32 символов — буквы, цифры, точка, дефис или подчёркивание, без пробелов' });
   }
-  if (typeof password !== 'string' || password.length < 8) {
-    return res.status(400).json({ error: 'Пароль должен быть не короче 8 символов' });
-  }
+  const error = auth.passwordError(password);
+  if (error) return res.status(400).json({ error });
   if (!ROLES.includes(role)) {
     return res.status(400).json({ error: 'Выберите роль' });
   }

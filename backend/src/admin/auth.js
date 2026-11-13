@@ -1,20 +1,41 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
+const bcrypt = require('bcryptjs');
 const prisma = require('../prisma');
 
 const scrypt = promisify(crypto.scrypt);
 const SESSION_MS = 12 * 60 * 60 * 1000;
+const BCRYPT_ROUNDS = 12;
+// bcrypt учитывает только первые 72 байта пароля
+const MAX_PASSWORD_BYTES = 72;
 
-async function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = await scrypt(password, salt, 64);
-  return `scrypt:${salt}:${hash.toString('hex')}`;
+function hashPassword(password) {
+  return bcrypt.hash(password, BCRYPT_ROUNDS);
 }
 
 async function verifyPassword(password, stored) {
-  const [, salt, hex] = stored.split(':');
-  const hash = await scrypt(password, salt, 64);
-  return crypto.timingSafeEqual(hash, Buffer.from(hex, 'hex'));
+  // Старые хэши scrypt (до перехода на bcrypt) проверяются по-старому и пересохраняются при входе
+  if (stored.startsWith('scrypt:')) {
+    const [, salt, hex] = stored.split(':');
+    const hash = await scrypt(password, salt, 64);
+    return crypto.timingSafeEqual(hash, Buffer.from(hex, 'hex'));
+  }
+  return bcrypt.compare(password, stored);
+}
+
+function needsRehash(stored) {
+  return !stored.startsWith('$2') || bcrypt.getRounds(stored) !== BCRYPT_ROUNDS;
+}
+
+// Ошибка проверки нового пароля или null
+function passwordError(password) {
+  if (typeof password !== 'string' || password.length < 8) {
+    return 'Пароль должен быть не короче 8 символов';
+  }
+  if (Buffer.byteLength(password) > MAX_PASSWORD_BYTES) {
+    return 'Пароль слишком длинный: до 72 латинских символов или 36 русских';
+  }
+  return null;
 }
 
 // В базе хранится только хэш токена, сам токен лежит в cookie
@@ -58,6 +79,8 @@ module.exports = {
   SESSION_MS,
   hashPassword,
   verifyPassword,
+  needsRehash,
+  passwordError,
   createSession,
   findSession,
   deleteSession,
