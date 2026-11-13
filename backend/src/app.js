@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const prisma = require('./prisma');
+const { getRatings } = require('./ratings');
 
 const app = express();
 
@@ -14,6 +15,10 @@ app.get('/api/health', async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: 'error', db: err.message });
   }
+});
+
+app.get('/api/ratings', async (req, res) => {
+  res.json(await getRatings());
 });
 
 module.exports = app;

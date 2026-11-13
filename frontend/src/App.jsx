@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
+import Ratings from './components/Ratings.jsx';
 
 export default function App() {
   const [lang, setLang] = useState('ru');
@@ -16,6 +17,7 @@ export default function App() {
           <Header lang={lang} setLang={setLang} />
           <Hero lang={lang} />
         </div>
+        <Ratings lang={lang} />
       </main>
     </>
   );
