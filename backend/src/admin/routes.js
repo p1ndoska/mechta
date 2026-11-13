@@ -3,7 +3,7 @@ const prisma = require('../prisma');
 const { ipGuard, clientIp } = require('./ipAllow');
 const auth = require('./auth');
 
-const COOKIE = 'admin_session';
+const COOKIE = 'admin_refresh';
 const MAX_FAILS = 5;
 const LOCK_MS = 15 * 60 * 1000;
 const fails = new Map();
@@ -28,11 +28,24 @@ function setCookie(res, token, maxAgeMs) {
   );
 }
 
+// Access token приходит в заголовке Authorization: Bearer <JWT>
 async function requireAdmin(req, res, next) {
-  const session = await auth.findSession(readToken(req));
-  if (!session) return res.status(401).json({ error: 'unauthorized' });
-  req.admin = session.admin;
+  const [scheme, token] = (req.get('authorization') || '').split(' ');
+  const id = scheme === 'Bearer' && token ? auth.verifyAccessToken(token) : null;
+  // Пользователь берётся из базы, чтобы удалённый сразу терял доступ, а смена роли применялась сразу
+  const admin = id ? await prisma.admin.findUnique({ where: { id } }) : null;
+  if (!admin) return res.status(401).json({ error: 'unauthorized' });
+  req.admin = admin;
   next();
+}
+
+function tokenResponse(admin) {
+  return {
+    accessToken: auth.createAccessToken(admin),
+    expiresIn: auth.ACCESS_TTL_SEC,
+    name: admin.name,
+    role: admin.role,
+  };
 }
 
 // Управлять пользователями может только роль «Администратор»
@@ -69,7 +82,17 @@ router.post('/login', async (req, res) => {
     });
   }
   setCookie(res, await auth.createSession(admin.id), auth.SESSION_MS);
-  res.json({ name: admin.name, role: admin.role });
+  res.json(tokenResponse(admin));
+});
+
+// Новый access token по refresh token из cookie
+router.post('/refresh', async (req, res) => {
+  const session = await auth.findSession(readToken(req));
+  if (!session) {
+    setCookie(res, '', 0);
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  res.json(tokenResponse(session.admin));
 });
 
 router.post('/logout', async (req, res) => {
@@ -96,6 +119,7 @@ router.post('/password', requireAdmin, async (req, res) => {
     where: { id: req.admin.id },
     data: { passwordHash: await auth.hashPassword(newPassword) },
   });
+  await auth.deleteOtherSessions(req.admin.id, readToken(req));
   res.sendStatus(204);
 });
 

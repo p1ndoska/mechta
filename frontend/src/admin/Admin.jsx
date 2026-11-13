@@ -1,14 +1,41 @@
 import { useEffect, useState } from 'react';
 import './Admin.css';
 
-async function api(path, body, method) {
+// Access token хранится только в памяти страницы, refresh token — в HttpOnly-cookie
+let accessToken = null;
+let refreshing = null;
+
+async function request(path, body, method) {
+  const headers = {};
+  if (body) headers['Content-Type'] = 'application/json';
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
   const res = await fetch(`/api/admin${path}`, {
     method: method || (body ? 'POST' : 'GET'),
-    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    headers,
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = res.status === 204 ? null : await res.json().catch(() => null);
   return { ok: res.ok, status: res.status, data };
+}
+
+function refresh() {
+  refreshing ||= request('/refresh', {})
+    .then((res) => {
+      accessToken = res.ok ? res.data.accessToken : null;
+      return res;
+    })
+    .finally(() => {
+      refreshing = null;
+    });
+  return refreshing;
+}
+
+// Если access token истёк, получаем новый по refresh token и повторяем запрос
+async function api(path, body, method) {
+  const res = await request(path, body, method);
+  if (res.status !== 401 || ['/login', '/refresh', '/logout'].includes(path)) return res;
+  const renewed = await refresh();
+  return renewed.ok ? request(path, body, method) : res;
 }
 
 function LoginForm({ onLogin }) {
@@ -23,7 +50,10 @@ function LoginForm({ onLogin }) {
     setError('');
     const res = await api('/login', { name, password });
     setBusy(false);
-    if (res.ok) onLogin(res.data);
+    if (res.ok) {
+      accessToken = res.data.accessToken;
+      onLogin(res.data);
+    }
     else setError(res.data?.error || 'Не удалось войти');
   }
 
@@ -254,8 +284,8 @@ export default function Admin() {
 
   useEffect(() => {
     document.title = 'Панель администратора — гостиница «Мечта»';
-    api('/me').then((res) => {
-      if (res.ok) setState({ status: 'in', ...res.data });
+    refresh().then((res) => {
+      if (res.ok) setState({ status: 'in', name: res.data.name, role: res.data.role });
       else if (res.status === 403) setState({ status: 'forbidden' });
       else setState({ status: 'out' });
     });
@@ -263,6 +293,7 @@ export default function Admin() {
 
   async function logout() {
     await api('/logout', {});
+    accessToken = null;
     setState({ status: 'out' });
   }
 
@@ -275,7 +306,7 @@ export default function Admin() {
           <p>Доступ запрещён</p>
         </div>
       )}
-      {state.status === 'out' && <LoginForm onLogin={(user) => setState({ status: 'in', ...user })} />}
+      {state.status === 'out' && <LoginForm onLogin={(user) => setState({ status: 'in', name: user.name, role: user.role })} />}
       {state.status === 'in' && (
         <div className="admin__card admin__card--wide">
           <div className="admin__top">

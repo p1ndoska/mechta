@@ -30,6 +30,7 @@ services:
       ADMIN_ALLOWED_IPS: ${ADMIN_ALLOWED_IPS:-127.0.0.1,::1,172.16.0.0/12,192.168.65.0/24}
       ADMIN_NAME: ${ADMIN_NAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+      JWT_SECRET: ${JWT_SECRET:-}
     # API доступен напрямую только с этого компьютера, снаружи — через сайт (nginx)
     ports:
       - "127.0.0.1:3002:3002"

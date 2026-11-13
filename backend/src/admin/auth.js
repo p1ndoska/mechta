@@ -1,10 +1,15 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const prisma = require('../prisma');
 
 const scrypt = promisify(crypto.scrypt);
+// Refresh token (в HttpOnly-cookie) живёт 12 часов, access token (JWT) — 15 минут
 const SESSION_MS = 12 * 60 * 60 * 1000;
+const ACCESS_TTL_SEC = 15 * 60;
+// Без JWT_SECRET ключ создаётся при запуске: после перезапуска панель просто обновит access token
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 const BCRYPT_ROUNDS = 12;
 // bcrypt учитывает только первые 72 байта пароля
 const MAX_PASSWORD_BYTES = 72;
@@ -38,7 +43,24 @@ function passwordError(password) {
   return null;
 }
 
-// В базе хранится только хэш токена, сам токен лежит в cookie
+function createAccessToken(admin) {
+  return jwt.sign({ name: admin.name, role: admin.role }, JWT_SECRET, {
+    algorithm: 'HS256',
+    subject: String(admin.id),
+    expiresIn: ACCESS_TTL_SEC,
+  });
+}
+
+// id пользователя из access token или null, если токен неверный или истёк
+function verifyAccessToken(token) {
+  try {
+    return Number(jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] }).sub);
+  } catch {
+    return null;
+  }
+}
+
+// В базе хранится только хэш refresh token, сам токен лежит в cookie
 function tokenHash(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
@@ -66,6 +88,11 @@ async function deleteSession(token) {
   if (token) await prisma.adminSession.deleteMany({ where: { token: tokenHash(token) } });
 }
 
+// Выход на всех устройствах, кроме текущего
+async function deleteOtherSessions(adminId, token) {
+  await prisma.adminSession.deleteMany({ where: { adminId, NOT: { token: tokenHash(token || '') } } });
+}
+
 // Админ по умолчанию создаётся, только если в базе нет ни одного админа
 async function ensureDefaultAdmin() {
   if ((await prisma.admin.count()) > 0) return;
@@ -77,6 +104,10 @@ async function ensureDefaultAdmin() {
 
 module.exports = {
   SESSION_MS,
+  ACCESS_TTL_SEC,
+  createAccessToken,
+  verifyAccessToken,
+  deleteOtherSessions,
   hashPassword,
   verifyPassword,
   needsRehash,
