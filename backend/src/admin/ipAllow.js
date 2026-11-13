@@ -39,7 +39,7 @@ function isAllowed(ip) {
 function ipGuard(req, res, next) {
   const ip = clientIp(req);
   if (isAllowed(ip)) return next();
-  console.warn('Админка: доступ запрещён для', ip);
+  console.warn('Панель администратора: доступ запрещён для', ip);
   res.status(403).json({ error: 'forbidden', ip });
 }
 

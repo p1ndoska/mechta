@@ -29,7 +29,7 @@ function LoginForm({ onLogin }) {
 
   return (
     <form className="admin__card" onSubmit={submit}>
-      <h1 className="admin__title">Вход в админку</h1>
+      <h1 className="admin__title">Вход в панель администратора</h1>
       <label className="admin__field">
         Логин
         <input value={login} onChange={(e) => setLogin(e.target.value)} autoComplete="username" autoFocus required />
@@ -105,7 +105,7 @@ export default function Admin() {
   const [state, setState] = useState({ status: 'loading' });
 
   useEffect(() => {
-    document.title = 'Админка — гостиница «Мечта»';
+    document.title = 'Панель администратора — гостиница «Мечта»';
     api('/me').then((res) => {
       if (res.ok) setState({ status: 'in', login: res.data.login });
       else if (res.status === 403) setState({ status: 'forbidden' });
@@ -131,13 +131,13 @@ export default function Admin() {
       {state.status === 'in' && (
         <div className="admin__card admin__card--wide">
           <div className="admin__top">
-            <h1 className="admin__title">Админка</h1>
+            <h1 className="admin__title">Панель администратора</h1>
             <span className="admin__muted">{state.login}</span>
             <button className="admin__link" type="button" onClick={logout}>
               Выйти
             </button>
           </div>
-          <p>Вы вошли в админку гостиницы «Мечта».</p>
+          <p>Вы вошли в панель администратора гостиницы «Мечта».</p>
           <PasswordForm />
         </div>
       )}
