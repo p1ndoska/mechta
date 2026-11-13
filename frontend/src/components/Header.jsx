@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './Header.css';
 
 const texts = {
@@ -17,6 +16,9 @@ const texts = {
     choose: 'Choose!',
   },
 };
+
+// Поменяйте число после замены логотипа, чтобы браузер не показывал старый
+const LOGO_VERSION = 2;
 
 const navLinks = ['#home', '#rooms', '#contacts'];
 
@@ -46,7 +48,6 @@ function FlagRU() {
 }
 
 export default function Header({ lang, setLang }) {
-  const [logoVisible, setLogoVisible] = useState(true);
   const t = texts[lang];
 
   return (
@@ -75,14 +76,7 @@ export default function Header({ lang, setLang }) {
             <span className="header__hotel-name">{t.name}</span>
           </span>
 
-          {logoVisible && (
-            <img
-              className="header__logo"
-              src="/images/logo/logo.png"
-              alt=""
-              onError={() => setLogoVisible(false)}
-            />
-          )}
+          <img className="header__logo" src={`/images/logo/logo.png?v=${LOGO_VERSION}`} alt="" />
 
           <span className="header__org">
             {t.org.map((line) => (
