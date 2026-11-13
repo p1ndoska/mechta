@@ -87,19 +87,18 @@ export default function Header({ lang, setLang }) {
           <a href="#rooms" className="header__choose" onClick={closeMenu}>
             {t.choose}
           </a>
+          <button
+            type="button"
+            className="header__lang"
+            title={switchTitle[lang]}
+            aria-label={`${switchTitle[lang]}: ${nextLang.toUpperCase()}`}
+            onClick={() => setLang(nextLang)}
+          >
+            <span key={lang} className="header__lang-code">
+              {lang.toUpperCase()}
+            </span>
+          </button>
         </nav>
-
-        <button
-          type="button"
-          className="header__lang"
-          title={switchTitle[lang]}
-          aria-label={`${switchTitle[lang]}: ${nextLang.toUpperCase()}`}
-          onClick={() => setLang(nextLang)}
-        >
-          <span key={lang} className="header__lang-code">
-            {lang.toUpperCase()}
-          </span>
-        </button>
 
         <button
           type="button"
