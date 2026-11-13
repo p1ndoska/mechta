@@ -166,3 +166,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+.admin__inline-form .admin__field {
+  min-width: 0;
+}
+
+.admin__field input {
+  width: 100%;
+  box-sizing: border-box;
+}
