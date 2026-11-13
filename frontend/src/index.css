@@ -11,3 +11,10 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
 }
+
+/* На узком экране первый экран не растягивается: высота блока с фото по пропорциям фото */
+@media (max-width: 800px) {
+  .first-screen {
+    min-height: 0;
+  }
+}
