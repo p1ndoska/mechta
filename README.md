@@ -15,6 +15,12 @@ frontend/   React + Vite
 | API      | 3002 |
 | БД       | 5435 |
 
+## Админка
+
+http://localhost:8083/administrator — открывается только с IP из `ADMIN_ALLOWED_IPS` (в `.env`, адреса или подсети через запятую), остальным nginx отвечает 403.
+При первом запуске создаётся админ `ADMIN_LOGIN` / `ADMIN_PASSWORD` (по умолчанию `admin` / `admin`), пароль меняется в самой админке.
+После изменения `.env`: `docker compose up -d`.
+
 ## Запуск из готовой сборки (без npm)
 
 ```
