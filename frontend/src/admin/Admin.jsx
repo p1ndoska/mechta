@@ -71,7 +71,6 @@ function PasswordForm() {
 
   return (
     <form className="admin__section" onSubmit={submit}>
-      <h2 className="admin__subtitle">Смена пароля</h2>
       <label className="admin__field">
         Текущий пароль
         <input
@@ -149,7 +148,6 @@ function UsersSection({ currentName }) {
 
   return (
     <section className="admin__section">
-      <h2 className="admin__subtitle">Пользователи</h2>
       <ul className="admin__users">
         {users.map((user) => (
           <li key={user.id} className="admin__user">
@@ -201,6 +199,56 @@ function UsersSection({ currentName }) {
   );
 }
 
+const tabs = [
+  { id: 'users', label: 'Пользователи', adminOnly: true },
+  { id: 'password', label: 'Смена пароля' },
+];
+
+function Tabs({ state }) {
+  const available = tabs.filter((tab) => !tab.adminOnly || state.role === 'ADMIN');
+  const fromHash = () => {
+    const id = window.location.hash.slice(1);
+    return available.some((tab) => tab.id === id) ? id : available[0].id;
+  };
+  const [active, setActive] = useState(fromHash);
+
+  useEffect(() => {
+    const onHash = () => setActive(fromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  });
+
+  function open(id) {
+    setActive(id);
+    window.history.replaceState(null, '', `#${id}`);
+  }
+
+  return (
+    <>
+      <div className="admin__tabs" role="tablist">
+        {available.map((tab) => (
+          <button
+            key={tab.id}
+            id={`tab-${tab.id}`}
+            className={`admin__tab${tab.id === active ? ' admin__tab--active' : ''}`}
+            type="button"
+            role="tab"
+            aria-selected={tab.id === active}
+            aria-controls={`panel-${tab.id}`}
+            onClick={() => open(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div id={`panel-${active}`} role="tabpanel" aria-labelledby={`tab-${active}`}>
+        {active === 'users' && <UsersSection currentName={state.name} />}
+        {active === 'password' && <PasswordForm />}
+      </div>
+    </>
+  );
+}
+
 export default function Admin() {
   const [state, setState] = useState({ status: 'loading' });
 
@@ -239,9 +287,7 @@ export default function Admin() {
               Выйти
             </button>
           </div>
-          <p>Вы вошли в панель администратора гостиницы «Мечта».</p>
-          {state.role === 'ADMIN' && <UsersSection currentName={state.name} />}
-          <PasswordForm />
+          <Tabs state={state} />
         </div>
       )}
     </div>
