@@ -178,3 +178,31 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+@media (max-width: 600px) {
+  .admin {
+    padding: 12px;
+  }
+
+  .admin__card {
+    padding: 20px;
+  }
+
+  .admin__top,
+  .admin__user {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .admin__top .admin__title {
+    flex-basis: 100%;
+  }
+
+  .admin__top .admin__muted {
+    margin-left: 0;
+  }
+
+  .admin__top .admin__link {
+    margin-left: auto;
+  }
+}
