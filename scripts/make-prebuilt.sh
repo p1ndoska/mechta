@@ -28,6 +28,8 @@ docker run --rm -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" -v "$ROOT/frontend
   rm -rf /out/frontend-dist && mv dist /out/frontend-dist
   chown -R "$HOST_UID:$HOST_GID" /out
 '
+# Картинки не дублируем в git: Dockerfile.prebuilt копирует public/ поверх dist
+rm -rf "$WORK/frontend-dist/images"
 rm -rf "$ROOT/frontend/dist" && mv "$WORK/frontend-dist" "$ROOT/frontend/dist"
 echo "frontend/dist обновлен"
 
