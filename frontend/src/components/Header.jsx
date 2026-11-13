@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import './Header.css';
 
 const texts = {
@@ -7,6 +8,7 @@ const texts = {
     org: ['Государственное предприятие', '«Белаэронавигация»', 'Брестский филиал'],
     nav: ['Главная', 'Номера', 'Контакты'],
     choose: 'К выбору!',
+    menu: 'Меню',
   },
   en: {
     hotel: 'hotel',
@@ -14,6 +16,7 @@ const texts = {
     org: ['State Enterprise', '«Belaeronavigatsia»', 'Brest Branch'],
     nav: ['Home', 'Rooms', 'Contacts'],
     choose: 'Choose!',
+    menu: 'Menu',
   },
 };
 
@@ -49,6 +52,20 @@ function FlagRU() {
 
 export default function Header({ lang, setLang }) {
   const t = texts[lang];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    const onResize = () => window.innerWidth > 800 && setMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="header">
@@ -85,13 +102,26 @@ export default function Header({ lang, setLang }) {
           </span>
         </a>
 
-        <nav className="header__nav">
+        <button
+          type="button"
+          className={`header__burger${menuOpen ? ' is-open' : ''}`}
+          aria-label={t.menu}
+          aria-expanded={menuOpen}
+          aria-controls="header-nav"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav id="header-nav" className={`header__nav${menuOpen ? ' is-open' : ''}`}>
           {t.nav.map((label, i) => (
-            <a key={navLinks[i]} href={navLinks[i]} className="header__link">
+            <a key={navLinks[i]} href={navLinks[i]} className="header__link" onClick={closeMenu}>
               {label}
             </a>
           ))}
-          <a href="#rooms" className="header__choose">
+          <a href="#rooms" className="header__choose" onClick={closeMenu}>
             {t.choose}
           </a>
         </nav>
