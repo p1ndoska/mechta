@@ -1,8 +1,8 @@
-# Готовая сборка dist из download-prebuilt.bat (собрана в облаке)
+# Собранный сайт из frontend/dist (лежит в git, обновляется через git pull)
 FROM nginx:stable-alpine
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY prebuilt/dist /usr/share/nginx/html
+COPY dist /usr/share/nginx/html
 # Свежие картинки из public/ (например, логотип) без пересборки
 COPY public/ /usr/share/nginx/html/
 EXPOSE 80

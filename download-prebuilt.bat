@@ -3,13 +3,21 @@ chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
 
-rem Имя архива берется из prebuilt.txt: у каждой сборки свое имя, поэтому прокси не отдаст старую копию
+rem Архив backend node_modules. Имя берется из prebuilt.txt и меняется только при смене зависимостей.
+rem Сайт (frontend\dist) приходит через git pull.
 set /p FILE=<prebuilt.txt
 set "URL=https://github.com/p1ndoska/mechta/releases/download/images/%FILE%"
 
+set "CURRENT="
+if exist backend\prebuilt\version.txt set /p CURRENT=<backend\prebuilt\version.txt
+if "%CURRENT%"=="%FILE%" (
+  echo Пакеты backend уже актуальные, скачивание не нужно
+  goto start
+)
+
 if exist "%FILE%" del "%FILE%"
 
-echo Скачивание готовой сборки %FILE%...
+echo Скачивание пакетов backend %FILE%...
 set /a TRY=0
 :retry
 set /a TRY+=1
@@ -41,7 +49,9 @@ if errorlevel 1 (
   exit /b 1
 )
 del "%FILE%"
+>backend\prebuilt\version.txt echo %FILE%
 
+:start
 echo Запуск контейнеров...
 docker compose up -d --build
 if errorlevel 1 exit /b 1

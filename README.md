@@ -21,8 +21,9 @@ frontend/   React + Vite
 download-prebuilt.bat
 ```
 
-Скачивает собранные в облаке `node_modules` backend и `dist` frontend и запускает Docker.
-Дальше достаточно `docker compose up -d --build` — npm при этом не используется.
+Скачивает собранные в облаке `node_modules` backend (только если изменились зависимости) и запускает Docker.
+Собранный сайт лежит в `frontend/dist` и приходит через `git pull`.
+npm при этом не используется.
 
 ## Запуск с полной сборкой в Docker (npm внутри Docker)
 
@@ -56,6 +57,6 @@ Vite: http://localhost:5173 (запросы `/api` проксируются на
 
 ```
 ./scripts/make-prebuilt.sh
-gh release upload images mechta-prebuilt-<hash>.tar.gz
-git add prebuilt.txt && git commit -m "Update prebuilt" && git push
+gh release upload images mechta-backend-<hash>.tar.gz   # только если зависимости backend изменились
+git add frontend/dist prebuilt.txt && git commit -m "Update build" && git push
 ```

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Собирает mechta-prebuilt.tar.gz (backend node_modules + frontend dist) для download-prebuilt.bat
+# Собирает frontend/dist (коммитится в git) и архив backend node_modules для download-prebuilt.bat
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WORK="$(mktemp -d)"
@@ -25,14 +25,17 @@ docker run --rm -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" -v "$ROOT/frontend
   cp -r /src/public /src/src .
   npm ci --include=dev --no-audit --no-fund
   npm run build
-  mkdir -p /out/frontend/prebuilt && mv dist /out/frontend/prebuilt/
+  rm -rf /out/frontend-dist && mv dist /out/frontend-dist
   chown -R "$HOST_UID:$HOST_GID" /out
 '
+rm -rf "$ROOT/frontend/dist" && mv "$WORK/frontend-dist" "$ROOT/frontend/dist"
+echo "frontend/dist обновлен"
 
-tar -czf "$WORK/archive.tar.gz" -C "$WORK" backend frontend
-NAME="mechta-prebuilt-$(sha256sum "$WORK/archive.tar.gz" | cut -c1-12).tar.gz"
+# Имя зависит только от package-lock.json: архив меняется только при смене зависимостей backend
+NAME="mechta-backend-$(sha256sum "$ROOT/backend/package-lock.json" | cut -c1-12).tar.gz"
 OUT="${1:-$ROOT}/$NAME"
-mv "$WORK/archive.tar.gz" "$OUT"
+tar -czf "$OUT" -C "$WORK" backend
 printf '%s' "$NAME" > "$ROOT/prebuilt.txt"
 ls -lh "$OUT"
-echo "Загрузите: gh release upload images \"$OUT\" и закоммитьте prebuilt.txt"
+echo "Если $NAME еще нет в релизе: gh release upload images \"$OUT\""
+echo "Закоммитьте frontend/dist и prebuilt.txt"
