@@ -86,4 +86,44 @@ router.post('/password', requireAdmin, async (req, res) => {
   res.sendStatus(204);
 });
 
+const LOGIN_RE = /^[a-zA-Z0-9._-]{3,32}$/;
+
+router.get('/users', requireAdmin, async (req, res) => {
+  const users = await prisma.admin.findMany({
+    select: { id: true, login: true, createdAt: true },
+    orderBy: { id: 'asc' },
+  });
+  res.json(users);
+});
+
+router.post('/users', requireAdmin, async (req, res) => {
+  const { login, password } = req.body ?? {};
+  if (typeof login !== 'string' || !LOGIN_RE.test(login)) {
+    return res
+      .status(400)
+      .json({ error: 'Логин: от 3 до 32 символов, латинские буквы, цифры, точка, дефис или подчёркивание' });
+  }
+  if (typeof password !== 'string' || password.length < 8) {
+    return res.status(400).json({ error: 'Пароль должен быть не короче 8 символов' });
+  }
+  if (await prisma.admin.findUnique({ where: { login } })) {
+    return res.status(400).json({ error: 'Пользователь с таким логином уже есть' });
+  }
+  const user = await prisma.admin.create({
+    data: { login, passwordHash: await auth.hashPassword(password) },
+    select: { id: true, login: true, createdAt: true },
+  });
+  res.status(201).json(user);
+});
+
+router.delete('/users/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (id === req.admin.id) {
+    return res.status(400).json({ error: 'Нельзя удалить самого себя' });
+  }
+  const { count } = await prisma.admin.deleteMany({ where: { id } });
+  if (!count) return res.status(404).json({ error: 'Пользователь не найден' });
+  res.sendStatus(204);
+});
+
 module.exports = router;

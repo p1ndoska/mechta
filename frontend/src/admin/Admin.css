@@ -128,3 +128,41 @@
 .admin p {
   margin: 0;
 }
+
+.admin__users {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #e6e7e1;
+  border-radius: 4px;
+}
+
+.admin__user {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.admin__user + .admin__user {
+  border-top: 1px solid #e6e7e1;
+}
+
+.admin__user-action {
+  margin-left: auto;
+  font-size: 14px;
+}
+
+.admin__inline-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  gap: 10px;
+}
+
+@media (max-width: 520px) {
+  .admin__inline-form {
+    grid-template-columns: 1fr;
+  }
+}
