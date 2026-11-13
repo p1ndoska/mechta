@@ -18,6 +18,23 @@ const texts = {
     choose: 'Choose!',
     menu: 'Menu',
   },
+  be: {
+    hotel: 'гасцініца',
+    name: 'МЕЧТА',
+    org: ['Дзяржаўнае прадпрыемства', '«Белаэранавігацыя»', 'Брэсцкі філіял'],
+    nav: ['Галоўная', 'Нумары', 'Кантакты'],
+    choose: 'Да выбару!',
+    menu: 'Меню',
+  },
+};
+
+// Порядок переключения языков по кругу
+const languages = ['ru', 'en', 'be'];
+
+const switchTitle = {
+  ru: 'Сменить язык',
+  en: 'Change language',
+  be: 'Змяніць мову',
 };
 
 // Поменяйте число после замены логотипа, чтобы браузер не показывал старый
@@ -25,35 +42,11 @@ const LOGO_VERSION = 2;
 
 const navLinks = ['#home', '#rooms', '#contacts'];
 
-function FlagGB() {
-  return (
-    <svg viewBox="0 0 60 30" width="16" height="10" aria-hidden="true">
-      <clipPath id="gb-clip">
-        <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" />
-      </clipPath>
-      <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
-      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
-      <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#gb-clip)" stroke="#C8102E" strokeWidth="4" />
-      <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
-      <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
-    </svg>
-  );
-}
-
-function FlagRU() {
-  return (
-    <svg viewBox="0 0 9 6" width="16" height="10" aria-hidden="true">
-      <rect width="9" height="2" y="0" fill="#fff" />
-      <rect width="9" height="2" y="2" fill="#0039A6" />
-      <rect width="9" height="2" y="4" fill="#D52B1E" />
-    </svg>
-  );
-}
-
 export default function Header({ lang, setLang }) {
   const t = texts[lang];
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const nextLang = languages[(languages.indexOf(lang) + 1) % languages.length];
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -69,23 +62,6 @@ export default function Header({ lang, setLang }) {
 
   return (
     <header className="header">
-      <div className="header__lang">
-        <button
-          type="button"
-          className={`header__lang-btn${lang === 'en' ? ' is-active' : ''}`}
-          onClick={() => setLang('en')}
-        >
-          <FlagGB /> EN
-        </button>
-        <button
-          type="button"
-          className={`header__lang-btn${lang === 'ru' ? ' is-active' : ''}`}
-          onClick={() => setLang('ru')}
-        >
-          <FlagRU /> RU
-        </button>
-      </div>
-
       <div className="header__inner">
         <a href="#home" className="header__brand">
           <span className="header__hotel">
@@ -102,6 +78,29 @@ export default function Header({ lang, setLang }) {
           </span>
         </a>
 
+        <nav id="header-nav" className={`header__nav${menuOpen ? ' is-open' : ''}`}>
+          {t.nav.map((label, i) => (
+            <a key={navLinks[i]} href={navLinks[i]} className="header__link" onClick={closeMenu}>
+              {label}
+            </a>
+          ))}
+          <a href="#rooms" className="header__choose" onClick={closeMenu}>
+            {t.choose}
+          </a>
+        </nav>
+
+        <button
+          type="button"
+          className="header__lang"
+          title={switchTitle[lang]}
+          aria-label={`${switchTitle[lang]}: ${nextLang.toUpperCase()}`}
+          onClick={() => setLang(nextLang)}
+        >
+          <span key={lang} className="header__lang-code">
+            {lang.toUpperCase()}
+          </span>
+        </button>
+
         <button
           type="button"
           className={`header__burger${menuOpen ? ' is-open' : ''}`}
@@ -114,17 +113,6 @@ export default function Header({ lang, setLang }) {
           <span />
           <span />
         </button>
-
-        <nav id="header-nav" className={`header__nav${menuOpen ? ' is-open' : ''}`}>
-          {t.nav.map((label, i) => (
-            <a key={navLinks[i]} href={navLinks[i]} className="header__link" onClick={closeMenu}>
-              {label}
-            </a>
-          ))}
-          <a href="#rooms" className="header__choose" onClick={closeMenu}>
-            {t.choose}
-          </a>
-        </nav>
       </div>
     </header>
   );

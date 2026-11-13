@@ -11,6 +11,11 @@ const texts = {
     text: 'Comfort, peace and a convenient location next to Brest Airport. The perfect choice for travellers and city guests.',
     button: 'Choose a room!',
   },
+  be: {
+    title: 'Гасцініца «Мечта» — месца, дзе мары збываюцца',
+    text: 'Утульнасць, спакой і зручнае размяшчэнне побач з аэрапортам Брэст. Ідэальны выбар для падарожнікаў і гасцей горада.',
+    button: 'Выбраць нумар для пражывання!',
+  },
 };
 
 export default function Hero({ lang }) {
