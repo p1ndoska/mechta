@@ -3,3 +3,11 @@ body {
   font-family: system-ui, sans-serif;
 }
 
+
+/* Шапка + блок с фото вместе занимают ровно высоту экрана */
+.first-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}

@@ -7,9 +7,11 @@ export default function App() {
 
   return (
     <>
-      <Header lang={lang} setLang={setLang} />
       <main>
-        <Hero lang={lang} />
+        <div className="first-screen">
+          <Header lang={lang} setLang={setLang} />
+          <Hero lang={lang} />
+        </div>
       </main>
     </>
   );

@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 75vh;
+  flex: 1;
   padding: 60px 24px;
   background: #3a3a3a url('/images/photos/photo_1_2026-09-02_11-00-40-2048x1536.jpg') center / cover no-repeat;
   text-align: center;
