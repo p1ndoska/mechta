@@ -24,7 +24,7 @@
 }
 
 .admin__card--wide {
-  max-width: 560px;
+  max-width: 680px;
 }
 
 .admin__top {
@@ -62,14 +62,16 @@
   font-size: 14px;
 }
 
-.admin__field input {
+.admin__field input,
+.admin__field select {
   padding: 10px 12px;
   border: 1px solid #c4c6c1;
   border-radius: 4px;
   font: inherit;
 }
 
-.admin__field input:focus {
+.admin__field input:focus,
+.admin__field select:focus {
   outline: 2px solid #7d823f;
   outline-offset: -1px;
   border-color: #7d823f;
@@ -156,12 +158,12 @@
 
 .admin__inline-form {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr auto;
   align-items: end;
   gap: 10px;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
   .admin__inline-form {
     grid-template-columns: 1fr;
   }
@@ -171,7 +173,8 @@
   min-width: 0;
 }
 
-.admin__field input {
+.admin__field input,
+.admin__field select {
   width: 100%;
   box-sizing: border-box;
 }

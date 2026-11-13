@@ -12,7 +12,7 @@ async function api(path, body, method) {
 }
 
 function LoginForm({ onLogin }) {
-  const [login, setLogin] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -21,9 +21,9 @@ function LoginForm({ onLogin }) {
     e.preventDefault();
     setBusy(true);
     setError('');
-    const res = await api('/login', { login, password });
+    const res = await api('/login', { name, password });
     setBusy(false);
-    if (res.ok) onLogin(res.data.login);
+    if (res.ok) onLogin(res.data);
     else setError(res.data?.error || 'Не удалось войти');
   }
 
@@ -31,8 +31,8 @@ function LoginForm({ onLogin }) {
     <form className="admin__card" onSubmit={submit}>
       <h1 className="admin__title">Вход в панель администратора</h1>
       <label className="admin__field">
-        Логин
-        <input value={login} onChange={(e) => setLogin(e.target.value)} autoComplete="username" autoFocus required />
+        Имя
+        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="username" autoFocus required />
       </label>
       <label className="admin__field">
         Пароль
@@ -101,10 +101,16 @@ function PasswordForm() {
   );
 }
 
-function UsersSection({ currentLogin }) {
+const roles = {
+  ADMIN: 'Администратор',
+  EDITOR: 'Редактор',
+};
+
+function UsersSection({ currentName }) {
   const [users, setUsers] = useState([]);
-  const [login, setLogin] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('EDITOR');
   const [message, setMessage] = useState(null);
 
   async function load() {
@@ -118,11 +124,12 @@ function UsersSection({ currentLogin }) {
 
   async function add(e) {
     e.preventDefault();
-    const res = await api('/users', { login, password });
+    const res = await api('/users', { name, password, role });
     if (res.ok) {
-      setLogin('');
+      setName('');
       setPassword('');
-      setMessage({ ok: true, text: `Пользователь ${res.data.login} добавлен` });
+      setRole('EDITOR');
+      setMessage({ ok: true, text: `Пользователь ${res.data.name} добавлен` });
       load();
     } else {
       setMessage({ ok: false, text: res.data?.error || 'Не удалось добавить пользователя' });
@@ -130,10 +137,10 @@ function UsersSection({ currentLogin }) {
   }
 
   async function remove(user) {
-    if (!window.confirm(`Удалить пользователя ${user.login}?`)) return;
+    if (!window.confirm(`Удалить пользователя ${user.name}?`)) return;
     const res = await api(`/users/${user.id}`, undefined, 'DELETE');
     if (res.ok) {
-      setMessage({ ok: true, text: `Пользователь ${user.login} удалён` });
+      setMessage({ ok: true, text: `Пользователь ${user.name} удалён` });
       load();
     } else {
       setMessage({ ok: false, text: res.data?.error || 'Не удалось удалить пользователя' });
@@ -146,9 +153,10 @@ function UsersSection({ currentLogin }) {
       <ul className="admin__users">
         {users.map((user) => (
           <li key={user.id} className="admin__user">
-            <span>{user.login}</span>
+            <span>{user.name}</span>
+            <span className="admin__muted">{roles[user.role]}</span>
             <span className="admin__muted">{new Date(user.createdAt).toLocaleDateString('ru-RU')}</span>
-            {user.login === currentLogin ? (
+            {user.name === currentName ? (
               <span className="admin__muted admin__user-action">это вы</span>
             ) : (
               <button className="admin__link admin__user-action" type="button" onClick={() => remove(user)}>
@@ -160,8 +168,8 @@ function UsersSection({ currentLogin }) {
       </ul>
       <form className="admin__inline-form" onSubmit={add}>
         <label className="admin__field">
-          Логин
-          <input value={login} onChange={(e) => setLogin(e.target.value)} autoComplete="off" required />
+          Имя
+          <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" required />
         </label>
         <label className="admin__field">
           Пароль
@@ -173,6 +181,16 @@ function UsersSection({ currentLogin }) {
             minLength={8}
             required
           />
+        </label>
+        <label className="admin__field">
+          Роль
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            {Object.entries(roles).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
         </label>
         <button className="admin__button" type="submit">
           Добавить
@@ -189,7 +207,7 @@ export default function Admin() {
   useEffect(() => {
     document.title = 'Панель администратора — гостиница «Мечта»';
     api('/me').then((res) => {
-      if (res.ok) setState({ status: 'in', login: res.data.login });
+      if (res.ok) setState({ status: 'in', ...res.data });
       else if (res.status === 403) setState({ status: 'forbidden' });
       else setState({ status: 'out' });
     });
@@ -209,18 +227,20 @@ export default function Admin() {
           <p>Доступ запрещён</p>
         </div>
       )}
-      {state.status === 'out' && <LoginForm onLogin={(login) => setState({ status: 'in', login })} />}
+      {state.status === 'out' && <LoginForm onLogin={(user) => setState({ status: 'in', ...user })} />}
       {state.status === 'in' && (
         <div className="admin__card admin__card--wide">
           <div className="admin__top">
             <h1 className="admin__title">Панель администратора</h1>
-            <span className="admin__muted">{state.login}</span>
+            <span className="admin__muted">
+              {state.name} · {roles[state.role]}
+            </span>
             <button className="admin__link" type="button" onClick={logout}>
               Выйти
             </button>
           </div>
           <p>Вы вошли в панель администратора гостиницы «Мечта».</p>
-          <UsersSection currentLogin={state.login} />
+          {state.role === 'ADMIN' && <UsersSection currentName={state.name} />}
           <PasswordForm />
         </div>
       )}

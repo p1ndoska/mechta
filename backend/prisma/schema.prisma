@@ -7,10 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AdminRole {
+  ADMIN
+  EDITOR
+}
+
 model Admin {
   id           Int            @id @default(autoincrement())
-  login        String         @unique
+  name         String         @unique
   passwordHash String
+  role         AdminRole      @default(EDITOR)
   createdAt    DateTime       @default(now())
   sessions     AdminSession[]
 }

@@ -28,7 +28,7 @@ services:
       PORT: 3002
       DATABASE_URL: postgresql://${POSTGRES_USER:-mechta}:${POSTGRES_PASSWORD:-mechta}@db:5432/${POSTGRES_DB:-mechta}?schema=public
       ADMIN_ALLOWED_IPS: ${ADMIN_ALLOWED_IPS:-127.0.0.1,::1,172.16.0.0/12,192.168.65.0/24}
-      ADMIN_LOGIN: ${ADMIN_LOGIN:-admin}
+      ADMIN_NAME: ${ADMIN_NAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
     # API доступен напрямую только с этого компьютера, снаружи — через сайт (nginx)
     ports:

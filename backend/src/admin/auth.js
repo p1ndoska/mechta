@@ -48,10 +48,10 @@ async function deleteSession(token) {
 // Админ по умолчанию создаётся, только если в базе нет ни одного админа
 async function ensureDefaultAdmin() {
   if ((await prisma.admin.count()) > 0) return;
-  const login = process.env.ADMIN_LOGIN || 'admin';
+  const name = process.env.ADMIN_NAME || 'admin';
   const password = process.env.ADMIN_PASSWORD || 'admin';
-  await prisma.admin.create({ data: { login, passwordHash: await hashPassword(password) } });
-  console.log(`Создан админ по умолчанию: ${login}`);
+  await prisma.admin.create({ data: { name, role: 'ADMIN', passwordHash: await hashPassword(password) } });
+  console.log(`Создан админ по умолчанию: ${name}`);
 }
 
 module.exports = {
