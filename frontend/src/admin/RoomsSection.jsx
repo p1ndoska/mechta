@@ -32,6 +32,8 @@ export default function RoomsSection() {
   const [fileKey, setFileKey] = useState(0);
   const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const [extras, setExtras] = useState([]);
 
   async function load() {
     const res = await api('/rooms');
@@ -49,7 +51,14 @@ export default function RoomsSection() {
     return () => URL.revokeObjectURL(url);
   }, [photo]);
 
+  function clearExtras() {
+    extras.forEach((extra) => URL.revokeObjectURL(extra.url));
+    setExtras([]);
+  }
+
   function reset() {
+    clearExtras();
+    setPhotos([]);
     setForm(empty);
     setEditId(null);
     setPhoto(null);
@@ -60,6 +69,8 @@ export default function RoomsSection() {
   function edit(room) {
     setForm({ title: room.title, description: room.description, price: String(room.price), priceFrom: room.priceFrom });
     setEditId(room.id);
+    clearExtras();
+    setPhotos(room.photos || []);
     setPhoto(null);
     setPreview(room.photoUrl);
     setFileKey((k) => k + 1);
@@ -77,6 +88,37 @@ export default function RoomsSection() {
     }
   }
 
+  async function chooseExtras(e) {
+    const files = [...e.target.files];
+    e.target.value = '';
+    const added = [];
+    for (const file of files) {
+      try {
+        const blob = await preparePhoto(file);
+        added.push({ blob, url: URL.createObjectURL(blob) });
+      } catch {
+        setMessage({ ok: false, text: `Не удалось открыть ${file.name}. Выберите JPEG, PNG или WebP` });
+      }
+    }
+    setExtras((list) => [...list, ...added]);
+  }
+
+  function dropExtra(extra) {
+    URL.revokeObjectURL(extra.url);
+    setExtras((list) => list.filter((item) => item !== extra));
+  }
+
+  async function movePhoto(item, direction) {
+    const res = await api(`/rooms/${editId}/photos/${item.id}/move`, { direction });
+    if (res.ok) setPhotos(res.data);
+  }
+
+  async function removePhoto(item) {
+    if (!window.confirm('Удалить это фото?')) return;
+    const res = await api(`/rooms/${editId}/photos/${item.id}`, undefined, 'DELETE');
+    if (res.ok) setPhotos(res.data);
+  }
+
   async function save(e) {
     e.preventDefault();
     if (!editId && !photo) {
@@ -90,6 +132,12 @@ export default function RoomsSection() {
     if (res.ok && photo) {
       const up = await api(`/rooms/${res.data.id}/photo`, photo, 'PUT');
       if (!up.ok) error = up.data?.error || 'Номер сохранён, но фото не загрузилось';
+    }
+    if (res.ok) {
+      for (const extra of extras) {
+        const up = await api(`/rooms/${res.data.id}/photos`, extra.blob);
+        if (!up.ok) error = up.data?.error || 'Номер сохранён, но не все дополнительные фото загрузились';
+      }
     }
     setBusy(false);
     if (error) {
@@ -170,6 +218,48 @@ export default function RoomsSection() {
             <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={choosePhoto} />
           </label>
         </div>
+        <div className="admin__field">
+          Дополнительные фото (для страницы номера)
+          {(photos.length > 0 || extras.length > 0) && (
+            <div className="admin__extras">
+              {photos.map((item, i) => (
+                <span key={item.id} className="admin__extra">
+                  <img src={item.url} alt="" />
+                  <span className="admin__extra-actions">
+                    <button className="admin__icon" type="button" onClick={() => movePhoto(item, 'up')} disabled={i === 0} aria-label="Раньше">
+                      ←
+                    </button>
+                    <button
+                      className="admin__icon"
+                      type="button"
+                      onClick={() => movePhoto(item, 'down')}
+                      disabled={i === photos.length - 1}
+                      aria-label="Позже"
+                    >
+                      →
+                    </button>
+                    <button className="admin__icon" type="button" onClick={() => removePhoto(item)} aria-label="Удалить фото">
+                      ×
+                    </button>
+                  </span>
+                </span>
+              ))}
+              {extras.map((extra) => (
+                <span key={extra.url} className="admin__extra admin__extra--new">
+                  <img src={extra.url} alt="" />
+                  <span className="admin__extra-actions">
+                    <span className="admin__muted">новое</span>
+                    <button className="admin__icon" type="button" onClick={() => dropExtra(extra)} aria-label="Убрать фото">
+                      ×
+                    </button>
+                  </span>
+                </span>
+              ))}
+            </div>
+          )}
+          <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={chooseExtras} />
+          {extras.length > 0 && <span className="admin__muted">Новые фото загрузятся после нажатия «{editId ? 'Сохранить' : 'Добавить'}»</span>}
+        </div>
         <label className="admin__field">
           Название
           <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={100} required />
@@ -179,8 +269,8 @@ export default function RoomsSection() {
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
-            maxLength={500}
-            rows={3}
+            maxLength={3000}
+            rows={5}
           />
         </label>
         <div className="admin__room-price">

@@ -359,3 +359,35 @@
     justify-content: flex-end;
   }
 }
+
+.admin__extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin__extra {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 104px;
+}
+
+.admin__extra img {
+  width: 104px;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.admin__extra--new img {
+  outline: 2px dashed #7d823f;
+  outline-offset: -2px;
+}
+
+.admin__extra-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}

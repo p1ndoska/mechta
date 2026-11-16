@@ -3,9 +3,12 @@ import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Ratings from './components/Ratings.jsx';
 import Rooms from './components/Rooms.jsx';
+import RoomPage from './components/RoomPage.jsx';
 import Admin from './admin/Admin.jsx';
 
 const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
+const roomId = window.location.pathname.match(/^\/rooms\/(\d+)\/?$/)?.[1];
+const languages = ['ru', 'en', 'be'];
 
 export default function App() {
   if (isAdmin) return <Admin />;
@@ -13,11 +16,25 @@ export default function App() {
 }
 
 function Site() {
-  const [lang, setLang] = useState('ru');
+  // Язык запоминается, чтобы не сбрасываться при переходе на страницу номера и обратно
+  const [lang, setLang] = useState(() => {
+    const saved = localStorage.getItem('lang');
+    return languages.includes(saved) ? saved : 'ru';
+  });
 
   useEffect(() => {
     document.documentElement.lang = lang;
+    localStorage.setItem('lang', lang);
   }, [lang]);
+
+  if (roomId) {
+    return (
+      <main>
+        <Header lang={lang} setLang={setLang} />
+        <RoomPage id={roomId} lang={lang} />
+      </main>
+    );
+  }
 
   return (
     <>

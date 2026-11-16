@@ -21,6 +21,8 @@
 }
 
 .rooms__card {
+  color: inherit;
+  text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -42,6 +44,10 @@
 }
 
 .rooms__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
   margin: 14px 0 0;
   font-size: 16px;
   line-height: 1.6;
@@ -69,7 +75,7 @@
   cursor: pointer;
 }
 
-.rooms__more:hover {
+.rooms__card:hover .rooms__more {
   background: #6f742f;
 }
 

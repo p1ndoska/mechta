@@ -41,6 +41,20 @@ model Room {
   sortOrder   Int      @default(0)
   photo       Bytes?
   photoType   String?
+  photos      RoomPhoto[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// Дополнительные фото на странице номера
+model RoomPhoto {
+  id        Int      @id @default(autoincrement())
+  roomId    Int
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  data      Bytes
+  type      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([roomId])
 }

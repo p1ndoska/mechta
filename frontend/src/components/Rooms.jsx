@@ -26,7 +26,7 @@ export default function Rooms({ lang }) {
       <h2 className="rooms__title">{t.title}</h2>
       <div className="rooms__grid">
         {rooms.map((room) => (
-          <article key={room.id} className="rooms__card">
+          <a key={room.id} className="rooms__card" href={`/rooms/${room.id}`}>
             {room.photoUrl ? (
               <img className="rooms__photo" src={room.photoUrl} alt={room.title} loading="lazy" />
             ) : (
@@ -38,10 +38,10 @@ export default function Rooms({ lang }) {
               {room.priceFrom && `${t.from} `}
               {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
             </p>
-            <button className="rooms__more" type="button">
+            <span className="rooms__more">
               {t.more} <span aria-hidden="true">→</span>
-            </button>
-          </article>
+            </span>
+          </a>
         ))}
       </div>
     </section>

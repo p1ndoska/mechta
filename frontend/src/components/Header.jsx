@@ -40,7 +40,7 @@ const switchTitle = {
 // Поменяйте число после замены логотипа, чтобы браузер не показывал старый
 const LOGO_VERSION = 2;
 
-const navLinks = ['#home', '#rooms', '#contacts'];
+const navLinks = ['/#home', '/#rooms', '/#contacts'];
 
 export default function Header({ lang, setLang }) {
   const t = texts[lang];
@@ -63,7 +63,7 @@ export default function Header({ lang, setLang }) {
   return (
     <header className="header">
       <div className="header__inner">
-        <a href="#home" className="header__brand">
+        <a href="/#home" className="header__brand">
           <span className="header__hotel">
             <span className="header__hotel-small">{t.hotel}</span>
             <span className="header__hotel-name">{t.name}</span>
@@ -84,7 +84,7 @@ export default function Header({ lang, setLang }) {
               {label}
             </a>
           ))}
-          <a href="#rooms" className="header__choose" onClick={closeMenu}>
+          <a href="/#rooms" className="header__choose" onClick={closeMenu}>
             {t.choose}
           </a>
           <button
