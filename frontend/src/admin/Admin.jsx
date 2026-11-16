@@ -1,42 +1,8 @@
 import { useEffect, useState } from 'react';
 import './Admin.css';
+import { api, refresh, setAccessToken } from './api.js';
+import RoomsSection from './RoomsSection.jsx';
 
-// Access token хранится только в памяти страницы, refresh token — в HttpOnly-cookie
-let accessToken = null;
-let refreshing = null;
-
-async function request(path, body, method) {
-  const headers = {};
-  if (body) headers['Content-Type'] = 'application/json';
-  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-  const res = await fetch(`/api/admin${path}`, {
-    method: method || (body ? 'POST' : 'GET'),
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = res.status === 204 ? null : await res.json().catch(() => null);
-  return { ok: res.ok, status: res.status, data };
-}
-
-function refresh() {
-  refreshing ||= request('/refresh', {})
-    .then((res) => {
-      accessToken = res.ok ? res.data.accessToken : null;
-      return res;
-    })
-    .finally(() => {
-      refreshing = null;
-    });
-  return refreshing;
-}
-
-// Если access token истёк, получаем новый по refresh token и повторяем запрос
-async function api(path, body, method) {
-  const res = await request(path, body, method);
-  if (res.status !== 401 || ['/login', '/refresh', '/logout'].includes(path)) return res;
-  const renewed = await refresh();
-  return renewed.ok ? request(path, body, method) : res;
-}
 
 function LoginForm({ onLogin }) {
   const [name, setName] = useState('');
@@ -51,7 +17,7 @@ function LoginForm({ onLogin }) {
     const res = await api('/login', { name, password });
     setBusy(false);
     if (res.ok) {
-      accessToken = res.data.accessToken;
+      setAccessToken(res.data.accessToken);
       onLogin(res.data);
     }
     else setError(res.data?.error || 'Не удалось войти');
@@ -230,6 +196,7 @@ function UsersSection({ currentName }) {
 }
 
 const tabs = [
+  { id: 'rooms', label: 'Номера' },
   { id: 'users', label: 'Пользователи', adminOnly: true },
   { id: 'password', label: 'Смена пароля' },
 ];
@@ -272,6 +239,7 @@ function Tabs({ state }) {
         ))}
       </div>
       <div id={`panel-${active}`} role="tabpanel" aria-labelledby={`tab-${active}`}>
+        {active === 'rooms' && <RoomsSection />}
         {active === 'users' && <UsersSection currentName={state.name} />}
         {active === 'password' && <PasswordForm />}
       </div>
@@ -293,7 +261,7 @@ export default function Admin() {
 
   async function logout() {
     await api('/logout', {});
-    accessToken = null;
+    setAccessToken(null);
     setState({ status: 'out' });
   }
 

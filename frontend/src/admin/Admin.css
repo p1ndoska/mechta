@@ -240,3 +240,122 @@
     margin-left: auto;
   }
 }
+
+.admin__field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #c4c6c1;
+  border-radius: 4px;
+  font: inherit;
+  resize: vertical;
+}
+
+.admin__field textarea:focus {
+  outline: 2px solid #7d823f;
+  outline-offset: -1px;
+  border-color: #7d823f;
+}
+
+.admin__room {
+  align-items: center;
+}
+
+.admin__room-photo {
+  flex: none;
+  width: 48px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 3px;
+  background: #e6e7e1;
+}
+
+.admin__room-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.admin__room-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.admin__icon {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #c4c6c1;
+  border-radius: 4px;
+  background: #fff;
+  font: inherit;
+  color: #5a5e27;
+  cursor: pointer;
+}
+
+.admin__icon:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.admin__room-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid #e6e7e1;
+}
+
+.admin__room-photo-field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin__room-photo-field .admin__field {
+  min-width: 0;
+}
+
+.admin__room-preview {
+  flex: none;
+  width: 96px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #e6e7e1;
+}
+
+.admin__room-price {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin__room-price .admin__field {
+  width: 160px;
+}
+
+.admin__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 11px;
+  font-size: 14px;
+}
+
+.admin__room-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .admin__room-actions {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}

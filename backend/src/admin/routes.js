@@ -2,6 +2,7 @@ const express = require('express');
 const prisma = require('../prisma');
 const { ipGuard, clientIp } = require('./ipAllow');
 const auth = require('./auth');
+const rooms = require('../rooms');
 
 const COOKIE = 'admin_refresh';
 const MAX_FAILS = 5;
@@ -163,5 +164,7 @@ router.delete('/users/:id', requireAdmin, requireRoleAdmin, async (req, res) => 
   if (!count) return res.status(404).json({ error: 'Пользователь не найден' });
   res.sendStatus(204);
 });
+
+router.use('/rooms', rooms.adminRouter(requireAdmin));
 
 module.exports = router;

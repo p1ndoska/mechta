@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Ratings from './components/Ratings.jsx';
+import Rooms from './components/Rooms.jsx';
 import Admin from './admin/Admin.jsx';
 
 const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
@@ -26,6 +27,7 @@ function Site() {
           <Hero lang={lang} />
         </div>
         <Ratings lang={lang} />
+        <Rooms lang={lang} />
       </main>
     </>
   );

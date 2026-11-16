@@ -3,6 +3,7 @@ const cors = require('cors');
 const prisma = require('./prisma');
 const { getRatings } = require('./ratings');
 const adminRoutes = require('./admin/routes');
+const rooms = require('./rooms');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/api/ratings', async (req, res) => {
   res.json(await getRatings());
 });
 
+app.use('/api/rooms', rooms.publicRouter);
 app.use('/api/admin', adminRoutes);
 
 module.exports = app;

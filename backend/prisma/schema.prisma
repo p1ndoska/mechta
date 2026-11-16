@@ -30,3 +30,17 @@ model AdminSession {
 
   @@index([adminId])
 }
+
+// Карточки номеров в блоке «Часто выбирают», добавляются через панель администратора
+model Room {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @default("")
+  price       Decimal  @db.Decimal(10, 2)
+  priceFrom   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  photo       Bytes?
+  photoType   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
