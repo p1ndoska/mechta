@@ -433,3 +433,7 @@
   font: inherit;
   font-size: 14px;
 }
+
+.admin__text-row .admin__text-label {
+  width: 64px;
+}

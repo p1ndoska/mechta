@@ -4,6 +4,7 @@ const { ipGuard, clientIp } = require('./ipAllow');
 const auth = require('./auth');
 const rooms = require('../rooms');
 const texts = require('../texts');
+const discounts = require('../discounts');
 
 const COOKIE = 'admin_refresh';
 const MAX_FAILS = 5;
@@ -168,5 +169,6 @@ router.delete('/users/:id', requireAdmin, requireRoleAdmin, async (req, res) => 
 
 router.use('/rooms', rooms.adminRouter(requireAdmin));
 router.use('/texts', texts.adminRouter(requireAdmin));
+router.use('/discounts', discounts.adminRouter(requireAdmin));
 
 module.exports = router;

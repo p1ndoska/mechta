@@ -3,6 +3,7 @@ import './Admin.css';
 import { api, refresh, setAccessToken } from './api.js';
 import RoomsSection from './RoomsSection.jsx';
 import TextsSection from './TextsSection.jsx';
+import DiscountsSection from './DiscountsSection.jsx';
 
 
 function LoginForm({ onLogin }) {
@@ -198,6 +199,7 @@ function UsersSection({ currentName }) {
 
 const tabs = [
   { id: 'rooms', label: 'Номера' },
+  { id: 'discounts', label: 'Скидки' },
   { id: 'texts', label: 'Тексты сайта' },
   { id: 'users', label: 'Пользователи', adminOnly: true },
   { id: 'password', label: 'Смена пароля' },
@@ -242,6 +244,7 @@ function Tabs({ state }) {
       </div>
       <div id={`panel-${active}`} role="tabpanel" aria-labelledby={`tab-${active}`}>
         {active === 'rooms' && <RoomsSection />}
+        {active === 'discounts' && <DiscountsSection />}
         {active === 'texts' && <TextsSection />}
         {active === 'users' && <UsersSection currentName={state.name} />}
         {active === 'password' && <PasswordForm />}

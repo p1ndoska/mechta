@@ -72,3 +72,15 @@ model SiteText {
   be        String   @default("")
   updatedAt DateTime @updatedAt
 }
+
+// Карточки блока «Скидки»
+model Discount {
+  id        Int      @id @default(autoincrement())
+  value     String
+  textRu    String
+  textEn    String   @default("")
+  textBe    String   @default("")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

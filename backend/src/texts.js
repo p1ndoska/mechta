@@ -17,6 +17,7 @@ const DEFAULTS = [
   ['advantages.balcony.text', 'Балкон — текст', 'Балкон в номере любой категории', 'Rooms of every category have a balcony', 'Балкон у нумары любой катэгорыі'],
   ['advantages.cafe.title', 'Кафе — заголовок', 'Обеды в кафе', 'Lunch at the cafe', 'Абеды ў кавярні'],
   ['advantages.cafe.text', 'Кафе — текст', 'Комплексные обеды от 6 BYN в кафе "Полёт"', 'Set lunches from 6 BYN at the "Polyot" cafe', 'Комплексныя абеды ад 6 BYN у кавярні "Палёт"'],
+  ['discounts.title', 'Заголовок блока', 'Скидки', 'Discounts', 'Зніжкі'],
 ].map(([key, label, ru, en, be]) => ({ key, label, ru, en, be }));
 const KEYS = new Set(DEFAULTS.map((item) => item.key));
 

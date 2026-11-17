@@ -227,4 +227,4 @@ function adminRouter(requireAdmin) {
   return router;
 }
 
-module.exports = { publicRouter, adminRouter };
+module.exports = { publicRouter, adminRouter, swapped };

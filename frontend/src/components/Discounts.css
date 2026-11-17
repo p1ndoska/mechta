@@ -1,0 +1,76 @@
+.discounts {
+  padding: 8px 32px 72px;
+  background: #fff;
+  color: #2f3542;
+}
+
+.discounts__title {
+  margin: 0 0 32px;
+  font-size: 40px;
+  font-weight: 600;
+  text-align: center;
+  color: #3a4256;
+}
+
+.discounts__list {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+.discounts__card {
+  box-sizing: border-box;
+  width: 220px;
+  min-height: 150px;
+  padding: 28px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  border: 1px solid #e3e4e8;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(30, 35, 50, 0.04);
+}
+
+.discounts__value {
+  font-size: 34px;
+  font-weight: 600;
+  color: #3a4256;
+}
+
+.discounts__text {
+  font-size: 15px;
+  line-height: 1.45;
+  color: #4a5164;
+}
+
+@media (max-width: 900px) {
+  .discounts {
+    padding: 0 20px 56px;
+  }
+
+  .discounts__title {
+    margin-bottom: 24px;
+    font-size: 30px;
+  }
+
+  .discounts__list {
+    gap: 16px;
+  }
+
+  .discounts__card {
+    width: calc(50% - 8px);
+    min-height: 130px;
+    padding: 22px 14px 18px;
+  }
+
+  .discounts__value {
+    font-size: 28px;
+  }
+}

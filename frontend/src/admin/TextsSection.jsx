@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
 
+const GROUPS = {
+  advantages: 'Блок «Наши преимущества»',
+  discounts: 'Блок «Скидки»',
+};
+
 const LANGS = [
   ['ru', 'RU'],
   ['en', 'EN'],
@@ -40,9 +45,12 @@ export default function TextsSection() {
   return (
     <section className="admin__section">
       <form className="admin__room-form" onSubmit={save}>
-        <h2 className="admin__subtitle">Блок «Наши преимущества»</h2>
         <p className="admin__muted">Если поле EN или BE пустое, на сайте покажется русский текст.</p>
-        {texts.map((item) => (
+        {texts.map((item, i) => {
+          const group = item.key.split('.')[0];
+          const groupStart = i === 0 || texts[i - 1].key.split('.')[0] !== group;
+          return [
+            groupStart && <h2 key={group} className="admin__subtitle">{GROUPS[group]}</h2>,
           <fieldset key={item.key} className="admin__lang">
             <legend>{item.label}</legend>
             {LANGS.map(([lang, name]) => (
@@ -56,8 +64,9 @@ export default function TextsSection() {
                 />
               </label>
             ))}
-          </fieldset>
-        ))}
+          </fieldset>,
+          ];
+        })}
         {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
         <div className="admin__room-buttons">
           <button className="admin__button" type="submit" disabled={busy}>
