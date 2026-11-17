@@ -63,3 +63,12 @@ model RoomPhoto {
 
   @@index([roomId])
 }
+
+// Надписи на сайте, изменённые в панели администратора
+model SiteText {
+  key       String   @id
+  ru        String
+  en        String   @default("")
+  be        String   @default("")
+  updatedAt DateTime @updatedAt
+}

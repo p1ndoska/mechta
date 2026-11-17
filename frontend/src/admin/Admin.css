@@ -409,3 +409,27 @@
   font-weight: 600;
   color: #5a5e27;
 }
+
+.admin__text-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.admin__text-row span {
+  flex: none;
+  width: 24px;
+  font-weight: 600;
+  color: #6b6f63;
+}
+
+.admin__text-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #c4c6c1;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 14px;
+}

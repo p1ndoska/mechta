@@ -3,6 +3,7 @@ const prisma = require('../prisma');
 const { ipGuard, clientIp } = require('./ipAllow');
 const auth = require('./auth');
 const rooms = require('../rooms');
+const texts = require('../texts');
 
 const COOKIE = 'admin_refresh';
 const MAX_FAILS = 5;
@@ -166,5 +167,6 @@ router.delete('/users/:id', requireAdmin, requireRoleAdmin, async (req, res) => 
 });
 
 router.use('/rooms', rooms.adminRouter(requireAdmin));
+router.use('/texts', texts.adminRouter(requireAdmin));
 
 module.exports = router;
