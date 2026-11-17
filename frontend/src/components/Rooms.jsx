@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import './Rooms.css';
 
+// Текст на выбранном языке, а если его нет — на русском
+export const pick = (texts, lang) => texts[lang] || texts.ru;
+
 const texts = {
   ru: { locale: 'ru-RU', title: 'Часто выбирают', from: 'от', more: 'Подробнее' },
   en: { locale: 'en-US', title: 'Popular rooms', from: 'from', more: 'More' },
@@ -28,12 +31,12 @@ export default function Rooms({ lang }) {
         {rooms.map((room) => (
           <a key={room.id} className="rooms__card" href={`/rooms/${room.id}`}>
             {room.photoUrl ? (
-              <img className="rooms__photo" src={room.photoUrl} alt={room.title} loading="lazy" />
+              <img className="rooms__photo" src={room.photoUrl} alt={pick(room.title, lang)} loading="lazy" />
             ) : (
               <div className="rooms__photo" />
             )}
-            <h3 className="rooms__name">{room.title}</h3>
-            {room.description && <p className="rooms__text">{room.description}</p>}
+            <h3 className="rooms__name">{pick(room.title, lang)}</h3>
+            {pick(room.description, lang) && <p className="rooms__text">{pick(room.description, lang)}</p>}
             <p className="rooms__price">
               {room.priceFrom && `${t.from} `}
               {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN

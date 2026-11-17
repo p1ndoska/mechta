@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
 
-const empty = { title: '', description: '', price: '', priceFrom: false };
+const LANGS = [
+  ['ru', 'Русский'],
+  ['en', 'English'],
+  ['be', 'Беларуская'],
+];
+const noText = { ru: '', en: '', be: '' };
+const empty = { title: noText, description: noText, price: '', priceFrom: false };
 const MAX_SIDE = 1600;
 
 // Уменьшаем фото в браузере до 1600 px по большей стороне, чтобы не грузить в базу снимки по 5–10 МБ
@@ -67,7 +73,7 @@ export default function RoomsSection() {
   }
 
   function edit(room) {
-    setForm({ title: room.title, description: room.description, price: String(room.price), priceFrom: room.priceFrom });
+    setForm({ title: { ...room.title }, description: { ...room.description }, price: String(room.price), priceFrom: room.priceFrom });
     setEditId(room.id);
     clearExtras();
     setPhotos(room.photos || []);
@@ -143,7 +149,7 @@ export default function RoomsSection() {
     if (error) {
       setMessage({ ok: false, text: error });
     } else {
-      setMessage({ ok: true, text: editId ? `Номер «${form.title}» сохранён` : `Номер «${form.title}» добавлен` });
+      setMessage({ ok: true, text: editId ? `Номер «${form.title.ru}» сохранён` : `Номер «${form.title.ru}» добавлен` });
       reset();
     }
     load();
@@ -155,11 +161,11 @@ export default function RoomsSection() {
   }
 
   async function remove(room) {
-    if (!window.confirm(`Удалить номер «${room.title}»?`)) return;
+    if (!window.confirm(`Удалить номер «${room.title.ru}»?`)) return;
     const res = await api(`/rooms/${room.id}`, undefined, 'DELETE');
     if (res.ok) {
       if (editId === room.id) reset();
-      setMessage({ ok: true, text: `Номер «${room.title}» удалён` });
+      setMessage({ ok: true, text: `Номер «${room.title.ru}» удалён` });
       load();
     } else {
       setMessage({ ok: false, text: res.data?.error || 'Не удалось удалить номер' });
@@ -179,7 +185,7 @@ export default function RoomsSection() {
                 <span className="admin__room-photo" />
               )}
               <span className="admin__room-info">
-                <span>{room.title}</span>
+                <span>{room.title.ru}</span>
                 <span className="admin__muted">{formatPrice(room)}</span>
               </span>
               <span className="admin__room-actions">
@@ -260,19 +266,29 @@ export default function RoomsSection() {
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={chooseExtras} />
           {extras.length > 0 && <span className="admin__muted">Новые фото загрузятся после нажатия «{editId ? 'Сохранить' : 'Добавить'}»</span>}
         </div>
-        <label className="admin__field">
-          Название
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={100} required />
-        </label>
-        <label className="admin__field">
-          Описание
-          <textarea
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            maxLength={3000}
-            rows={5}
-          />
-        </label>
+        {LANGS.map(([lang, name]) => (
+          <fieldset key={lang} className="admin__lang">
+            <legend>{name}</legend>
+            <label className="admin__field">
+              Название
+              <input
+                value={form.title[lang]}
+                onChange={(e) => setForm({ ...form, title: { ...form.title, [lang]: e.target.value } })}
+                maxLength={100}
+                required
+              />
+            </label>
+            <label className="admin__field">
+              Описание
+              <textarea
+                value={form.description[lang]}
+                onChange={(e) => setForm({ ...form, description: { ...form.description, [lang]: e.target.value } })}
+                maxLength={3000}
+                rows={4}
+              />
+            </label>
+          </fieldset>
+        ))}
         <div className="admin__room-price">
           <label className="admin__field">
             Цена, BYN

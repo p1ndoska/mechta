@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { pick } from './Rooms.jsx';
 import './RoomPage.css';
 
 const texts = {
-  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', notFound: 'Номер не найден', loading: 'Загрузка…' },
-  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', notFound: 'Room not found', loading: 'Loading…' },
-  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
+  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
+  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', hotel: 'Mechta Hotel', notFound: 'Room not found', loading: 'Loading…' },
+  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
 };
 
 function Lightbox({ photos, index, setIndex }) {
@@ -77,8 +78,8 @@ export default function RoomPage({ id, lang }) {
   }, [id]);
 
   useEffect(() => {
-    if (room) document.title = `${room.title} — гостиница «Мечта»`;
-  }, [room]);
+    if (room) document.title = `${pick(room.title, lang)} — ${t.hotel}`;
+  }, [room, t]);
 
   const gallery = room ? [room.photoUrl, ...room.photos.map((photo) => photo.url)].filter(Boolean) : [];
 
@@ -95,16 +96,16 @@ export default function RoomPage({ id, lang }) {
             <div className="room-page__main">
               {room.photoUrl && (
                 <button className="room-page__photo-button" type="button" onClick={() => setOpen(0)}>
-                  <img className="room-page__photo" src={room.photoUrl} alt={room.title} />
+                  <img className="room-page__photo" src={room.photoUrl} alt={pick(room.title, lang)} />
                 </button>
               )}
               <div className="room-page__info">
-                <h1 className="room-page__title">{room.title}</h1>
+                <h1 className="room-page__title">{pick(room.title, lang)}</h1>
                 <p className="room-page__price">
                   {room.priceFrom && `${t.from} `}
                   {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
                 </p>
-                {room.description && <p className="room-page__text">{room.description}</p>}
+                {pick(room.description, lang) && <p className="room-page__text">{pick(room.description, lang)}</p>}
               </div>
             </div>
             {room.photos.length > 0 && (

@@ -34,8 +34,13 @@ model AdminSession {
 // Карточки номеров в блоке «Часто выбирают», добавляются через панель администратора
 model Room {
   id          Int      @id @default(autoincrement())
-  title       String
-  description String   @default("")
+  // Название и описание на русском, английском и белорусском
+  titleRu       String
+  titleEn       String   @default("")
+  titleBe       String   @default("")
+  descriptionRu String   @default("")
+  descriptionEn String   @default("")
+  descriptionBe String   @default("")
   price       Decimal  @db.Decimal(10, 2)
   priceFrom   Boolean  @default(false)
   sortOrder   Int      @default(0)

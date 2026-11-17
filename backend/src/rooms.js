@@ -3,8 +3,12 @@ const prisma = require('./prisma');
 
 const FIELDS = {
   id: true,
-  title: true,
-  description: true,
+  titleRu: true,
+  titleEn: true,
+  titleBe: true,
+  descriptionRu: true,
+  descriptionEn: true,
+  descriptionBe: true,
   price: true,
   priceFrom: true,
   sortOrder: true,
@@ -23,8 +27,8 @@ const PHOTO_TYPES = {
 function toJson(room) {
   return {
     id: room.id,
-    title: room.title,
-    description: room.description,
+    title: { ru: room.titleRu, en: room.titleEn, be: room.titleBe },
+    description: { ru: room.descriptionRu, en: room.descriptionEn, be: room.descriptionBe },
     price: Number(room.price),
     priceFrom: room.priceFrom,
     // Версия в адресе меняется при каждом изменении карточки, поэтому фото можно кэшировать надолго
@@ -59,13 +63,26 @@ async function listRooms(select = FIELDS) {
   return rooms.map(toJson);
 }
 
+const LANGS = [
+  ['ru', 'Ru', 'русский'],
+  ['en', 'En', 'английский'],
+  ['be', 'Be', 'белорусский'],
+];
+
 function parseRoom(body) {
-  const { title, description = '', price, priceFrom = false } = body ?? {};
-  if (typeof title !== 'string' || !title.trim() || title.trim().length > 100) {
-    return { error: 'Название: от 1 до 100 символов' };
-  }
-  if (typeof description !== 'string' || description.length > 3000) {
-    return { error: 'Описание: не длиннее 3000 символов' };
+  const { title, description, price, priceFrom = false } = body ?? {};
+  const texts = {};
+  for (const [lang, suffix, name] of LANGS) {
+    const t = title?.[lang];
+    const d = description?.[lang] ?? '';
+    if (typeof t !== 'string' || !t.trim() || t.trim().length > 100) {
+      return { error: `Название (${name}): от 1 до 100 символов` };
+    }
+    if (typeof d !== 'string' || d.length > 3000) {
+      return { error: `Описание (${name}): не длиннее 3000 символов` };
+    }
+    texts[`title${suffix}`] = t.trim();
+    texts[`description${suffix}`] = d.trim();
   }
   const value = Number(price);
   if (price === '' || price === null || !Number.isFinite(value) || value <= 0 || value > 100000) {
@@ -73,7 +90,7 @@ function parseRoom(body) {
   }
   if (typeof priceFrom !== 'boolean') return { error: 'Неверное значение «от»' };
   return {
-    data: { title: title.trim(), description: description.trim(), price: Math.round(value * 100) / 100, priceFrom },
+    data: { ...texts, price: Math.round(value * 100) / 100, priceFrom },
   };
 }
 
