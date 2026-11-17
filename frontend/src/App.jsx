@@ -3,6 +3,7 @@ import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Ratings from './components/Ratings.jsx';
 import Rooms from './components/Rooms.jsx';
+import About from './components/About.jsx';
 import RoomPage from './components/RoomPage.jsx';
 import Admin from './admin/Admin.jsx';
 
@@ -45,6 +46,7 @@ function Site() {
         </div>
         <Ratings lang={lang} />
         <Rooms lang={lang} />
+        <About lang={lang} />
       </main>
     </>
   );
