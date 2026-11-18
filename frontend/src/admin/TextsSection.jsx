@@ -4,6 +4,7 @@ import { api } from './api.js';
 const GROUPS = {
   advantages: 'Блок «Наши преимущества»',
   discounts: 'Блок «Скидки»',
+  booking: 'Блок «Готовы к путешествию?»',
 };
 
 const LANGS = [

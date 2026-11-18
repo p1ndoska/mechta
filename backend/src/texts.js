@@ -18,6 +18,9 @@ const DEFAULTS = [
   ['advantages.cafe.title', 'Кафе — заголовок', 'Обеды в кафе', 'Lunch at the cafe', 'Абеды ў кавярні'],
   ['advantages.cafe.text', 'Кафе — текст', 'Комплексные обеды от 6 BYN в кафе "Полёт"', 'Set lunches from 6 BYN at the "Polyot" cafe', 'Комплексныя абеды ад 6 BYN у кавярні "Палёт"'],
   ['discounts.title', 'Заголовок блока', 'Скидки', 'Discounts', 'Зніжкі'],
+  ['booking.title', 'Заголовок', 'Готовы к путешествию?', 'Ready to travel?', 'Гатовыя да падарожжа?'],
+  ['booking.text', 'Текст', 'Забронируйте номер прямо сейчас и наслаждайтесь комфортом по доступной цене.', 'Book a room right now and enjoy comfort at an affordable price.', 'Забраніруйце нумар проста зараз і атрымлівайце асалоду ад камфорту па даступнай цане.'],
+  ['booking.button', 'Кнопка', 'Выбрать гостиничный номер!', 'Choose a hotel room!', 'Выбраць гасцінічны нумар!'],
 ].map(([key, label, ru, en, be]) => ({ key, label, ru, en, be }));
 const KEYS = new Set(DEFAULTS.map((item) => item.key));
 

@@ -1,0 +1,80 @@
+.booking {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 48px 24px;
+  box-sizing: border-box;
+  background: #3b4155 url('/images/photos/full-ph-2048x714.png') center / cover no-repeat;
+  text-align: center;
+}
+
+.booking::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Затемнение фото с холодным оттенком, чтобы текст читался */
+  background: rgba(40, 46, 80, 0.35);
+  backdrop-filter: saturate(0.6) brightness(0.6);
+}
+
+.booking__content {
+  position: relative;
+  max-width: 900px;
+}
+
+.booking__title {
+  margin: 0 0 14px;
+  font-size: clamp(24px, 2.4vw, 40px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: #efefc9;
+}
+
+.booking__text {
+  margin: 0 auto 28px;
+  max-width: 620px;
+  font-size: clamp(12px, 1vw, 15px);
+  line-height: 1.6;
+  color: #f1f1e4;
+}
+
+.booking__button {
+  display: inline-block;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: #f4f0d4;
+  font-size: clamp(12px, 0.9vw, 14px);
+  font-weight: 600;
+  color: #3a2f22;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.booking__button:hover {
+  background: #fffbe3;
+}
+
+@media (max-width: 800px) {
+  .booking {
+    min-height: 260px;
+    padding: 36px 16px;
+  }
+
+  .booking__title {
+    margin-bottom: 10px;
+    font-size: clamp(20px, 5vw, 26px);
+  }
+
+  .booking__text {
+    margin-bottom: 18px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .booking__button {
+    padding: 9px 20px;
+    font-size: 13px;
+  }
+}

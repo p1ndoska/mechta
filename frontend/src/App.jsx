@@ -6,6 +6,7 @@ import Rooms from './components/Rooms.jsx';
 import About from './components/About.jsx';
 import Advantages from './components/Advantages.jsx';
 import Discounts from './components/Discounts.jsx';
+import Booking from './components/Booking.jsx';
 import RoomPage from './components/RoomPage.jsx';
 import Admin from './admin/Admin.jsx';
 
@@ -51,6 +52,7 @@ function Site() {
         <About lang={lang} />
         <Advantages lang={lang} />
         <Discounts lang={lang} />
+        <Booking lang={lang} />
       </main>
     </>
   );
