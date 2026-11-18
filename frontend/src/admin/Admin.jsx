@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import './Admin.css';
 import { api, refresh, setAccessToken } from './api.js';
+import { messageClass, ui } from './ui.js';
 import RoomsSection from './RoomsSection.jsx';
 import TextsSection from './TextsSection.jsx';
 import DiscountsSection from './DiscountsSection.jsx';
@@ -26,15 +26,16 @@ function LoginForm({ onLogin }) {
   }
 
   return (
-    <form className="admin__card" onSubmit={submit}>
-      <h1 className="admin__title">Вход в панель администратора</h1>
-      <label className="admin__field">
+    <form className={ui.card} onSubmit={submit}>
+      <h1 className={ui.title}>Вход в панель администратора</h1>
+      <label className={ui.field}>
         Имя
-        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="username" autoFocus required />
+        <input className={ui.input} value={name} onChange={(e) => setName(e.target.value)} autoComplete="username" autoFocus required />
       </label>
-      <label className="admin__field">
+      <label className={ui.field}>
         Пароль
         <input
+          className={ui.input}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -42,8 +43,8 @@ function LoginForm({ onLogin }) {
           required
         />
       </label>
-      {error && <p className="admin__error">{error}</p>}
-      <button className="admin__button" type="submit" disabled={busy}>
+      {error && <p className={ui.error}>{error}</p>}
+      <button className={ui.button} type="submit" disabled={busy}>
         Войти
       </button>
     </form>
@@ -68,10 +69,11 @@ function PasswordForm() {
   }
 
   return (
-    <form className="admin__section" onSubmit={submit}>
-      <label className="admin__field">
+    <form className={ui.section} onSubmit={submit}>
+      <label className={ui.field}>
         Текущий пароль
         <input
+          className={ui.input}
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrent(e.target.value)}
@@ -79,9 +81,10 @@ function PasswordForm() {
           required
         />
       </label>
-      <label className="admin__field">
+      <label className={ui.field}>
         Новый пароль
         <input
+          className={ui.input}
           type="password"
           value={newPassword}
           onChange={(e) => setNew(e.target.value)}
@@ -90,8 +93,8 @@ function PasswordForm() {
           required
         />
       </label>
-      {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
-      <button className="admin__button" type="submit">
+      {message && <p className={messageClass(message)}>{message.text}</p>}
+      <button className={ui.button} type="submit">
         Сменить пароль
       </button>
     </form>
@@ -145,31 +148,32 @@ function UsersSection({ currentName }) {
   }
 
   return (
-    <section className="admin__section">
-      <ul className="admin__users">
+    <section className={ui.section}>
+      <ul className={ui.list}>
         {users.map((user) => (
-          <li key={user.id} className="admin__user">
+          <li key={user.id} className={`${ui.row} items-baseline`}>
             <span>{user.name}</span>
-            <span className="admin__muted">{roles[user.role]}</span>
-            <span className="admin__muted">{new Date(user.createdAt).toLocaleDateString('ru-RU')}</span>
+            <span className={ui.muted}>{roles[user.role]}</span>
+            <span className={ui.muted}>{new Date(user.createdAt).toLocaleDateString('ru-RU')}</span>
             {user.name === currentName ? (
-              <span className="admin__muted admin__user-action">это вы</span>
+              <span className={`${ui.muted} ml-auto`}>это вы</span>
             ) : (
-              <button className="admin__link admin__user-action" type="button" onClick={() => remove(user)}>
+              <button className={`${ui.link} ml-auto text-[14px]`} type="button" onClick={() => remove(user)}>
                 Удалить
               </button>
             )}
           </li>
         ))}
       </ul>
-      <form className="admin__inline-form" onSubmit={add}>
-        <label className="admin__field">
+      <form className={ui.inlineForm} onSubmit={add}>
+        <label className={ui.field}>
           Имя
-          <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" required />
+          <input className={ui.input} value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" required />
         </label>
-        <label className="admin__field">
+        <label className={ui.field}>
           Пароль
           <input
+            className={ui.input}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -178,9 +182,9 @@ function UsersSection({ currentName }) {
             required
           />
         </label>
-        <label className="admin__field">
+        <label className={ui.field}>
           Роль
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <select className={ui.input} value={role} onChange={(e) => setRole(e.target.value)}>
             {Object.entries(roles).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -188,11 +192,11 @@ function UsersSection({ currentName }) {
             ))}
           </select>
         </label>
-        <button className="admin__button" type="submit">
+        <button className={ui.button} type="submit">
           Добавить
         </button>
       </form>
-      {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
+      {message && <p className={messageClass(message)}>{message.text}</p>}
     </section>
   );
 }
@@ -226,12 +230,12 @@ function Tabs({ state }) {
 
   return (
     <>
-      <div className="admin__tabs" role="tablist">
+      <div className={ui.tabs} role="tablist">
         {available.map((tab) => (
           <button
             key={tab.id}
             id={`tab-${tab.id}`}
-            className={`admin__tab${tab.id === active ? ' admin__tab--active' : ''}`}
+            className={`${ui.tab} ${tab.id === active ? ui.tabActive : ui.tabIdle}`}
             type="button"
             role="tab"
             aria-selected={tab.id === active}
@@ -272,23 +276,23 @@ export default function Admin() {
   }
 
   return (
-    <div className="admin">
-      {state.status === 'loading' && <p className="admin__muted">Загрузка…</p>}
+    <div className={ui.page}>
+      {state.status === 'loading' && <p className={ui.muted}>Загрузка…</p>}
       {state.status === 'forbidden' && (
-        <div className="admin__card">
-          <h1 className="admin__title">403</h1>
+        <div className={ui.card}>
+          <h1 className={ui.title}>403</h1>
           <p>Доступ запрещён</p>
         </div>
       )}
       {state.status === 'out' && <LoginForm onLogin={(user) => setState({ status: 'in', name: user.name, role: user.role })} />}
       {state.status === 'in' && (
-        <div className="admin__card admin__card--wide">
-          <div className="admin__top">
-            <h1 className="admin__title">Панель администратора</h1>
-            <span className="admin__muted">
+        <div className={ui.cardWide}>
+          <div className={ui.top}>
+            <h1 className={`${ui.title} max-md:basis-full`}>Панель администратора</h1>
+            <span className={`${ui.muted} ml-auto max-md:ml-0`}>
               {state.name} · {roles[state.role]}
             </span>
-            <button className="admin__link" type="button" onClick={logout}>
+            <button className={`${ui.link} max-md:ml-auto`} type="button" onClick={logout}>
               Выйти
             </button>
           </div>

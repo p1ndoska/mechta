@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
+import { messageClass, ui } from './ui.js';
 
 const LANGS = [
   ['ru', 'RU'],
@@ -63,22 +64,22 @@ export default function DiscountsSection() {
   }
 
   return (
-    <section className="admin__section">
-      <p className="admin__muted">Карточки показываются на сайте в блоке «Скидки» в этом порядке.</p>
+    <section className={ui.section}>
+      <p className={ui.muted}>Карточки показываются на сайте в блоке «Скидки» в этом порядке.</p>
       {items.length > 0 ? (
-        <ul className="admin__users">
+        <ul className={ui.list}>
           {items.map((item, i) => (
-            <li key={item.id} className="admin__user admin__room">
-              <span className="admin__room-info">
+            <li key={item.id} className={`${ui.row} items-center`}>
+              <span className={ui.roomInfo}>
                 <span>{item.value}</span>
-                <span className="admin__muted">{item.text.ru}</span>
+                <span className={ui.muted}>{item.text.ru}</span>
               </span>
-              <span className="admin__room-actions">
-                <button className="admin__icon" type="button" onClick={() => move(item, 'up')} disabled={i === 0} aria-label="Выше">
+              <span className={ui.roomActions}>
+                <button className={ui.icon} type="button" onClick={() => move(item, 'up')} disabled={i === 0} aria-label="Выше">
                   ↑
                 </button>
                 <button
-                  className="admin__icon"
+                  className={ui.icon}
                   type="button"
                   onClick={() => move(item, 'down')}
                   disabled={i === items.length - 1}
@@ -86,10 +87,10 @@ export default function DiscountsSection() {
                 >
                   ↓
                 </button>
-                <button className="admin__link" type="button" onClick={() => edit(item)}>
+                <button className={ui.link} type="button" onClick={() => edit(item)}>
                   Изменить
                 </button>
-                <button className="admin__link" type="button" onClick={() => remove(item)}>
+                <button className={ui.link} type="button" onClick={() => remove(item)}>
                   Удалить
                 </button>
               </span>
@@ -97,14 +98,15 @@ export default function DiscountsSection() {
           ))}
         </ul>
       ) : (
-        <p className="admin__muted">Скидок пока нет. Пока их нет, блок на сайте не показывается.</p>
+        <p className={ui.muted}>Скидок пока нет. Пока их нет, блок на сайте не показывается.</p>
       )}
 
-      <form className="admin__room-form" onSubmit={save}>
-        <h2 className="admin__subtitle">{editId ? 'Изменить скидку' : 'Добавить скидку'}</h2>
-        <label className="admin__text-row">
-          <span className="admin__text-label">Скидка</span>
+      <form className={ui.form} onSubmit={save}>
+        <h2 className={ui.subtitle}>{editId ? 'Изменить скидку' : 'Добавить скидку'}</h2>
+        <label className={ui.textRow}>
+          <span className={ui.textRowLabelWide}>Скидка</span>
           <input
+            className={ui.textRowInput}
             value={form.value}
             onChange={(e) => setForm({ ...form, value: e.target.value })}
             placeholder="5%"
@@ -112,12 +114,13 @@ export default function DiscountsSection() {
             required
           />
         </label>
-        <fieldset className="admin__lang">
-          <legend>Описание</legend>
+        <fieldset className={ui.lang}>
+          <legend className={ui.legend}>Описание</legend>
           {LANGS.map(([lang, name]) => (
-            <label key={lang} className="admin__text-row">
-              <span>{name}</span>
+            <label key={lang} className={ui.textRow}>
+              <span className={ui.textRowLabel}>{name}</span>
               <input
+                className={ui.textRowInput}
                 value={form.text[lang]}
                 onChange={(e) => setForm({ ...form, text: { ...form.text, [lang]: e.target.value } })}
                 maxLength={200}
@@ -126,14 +129,14 @@ export default function DiscountsSection() {
             </label>
           ))}
         </fieldset>
-        <p className="admin__muted">Если EN или BE пустые, на сайте покажется русский текст.</p>
-        {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
-        <div className="admin__room-buttons">
-          <button className="admin__button" type="submit" disabled={busy}>
+        <p className={ui.muted}>Если EN или BE пустые, на сайте покажется русский текст.</p>
+        {message && <p className={messageClass(message)}>{message.text}</p>}
+        <div className={ui.buttons}>
+          <button className={ui.button} type="submit" disabled={busy}>
             {editId ? 'Сохранить' : 'Добавить'}
           </button>
           {editId && (
-            <button className="admin__link" type="button" onClick={reset}>
+            <button className={ui.link} type="button" onClick={reset}>
               Отмена
             </button>
           )}

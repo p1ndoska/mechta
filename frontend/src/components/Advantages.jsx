@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './Advantages.css';
 
 const ICONS = '/images/photos';
 const items = [
@@ -26,15 +25,15 @@ export default function Advantages({ lang }) {
   const t = (key) => texts[key]?.[lang] || texts[key]?.ru || '';
 
   return (
-    <section className="advantages" id="advantages">
-      <h2 className="advantages__title">{t('advantages.title')}</h2>
-      <ul className="advantages__grid">
+    <section className="bg-white px-8 pt-16 pb-18 text-ink max-xl:px-5 max-xl:pt-12 max-xl:pb-14" id="advantages">
+      <h2 className="mb-11 text-center text-title font-semibold text-ink-heading max-xl:mb-8 max-xl:text-title-sm">{t('advantages.title')}</h2>
+      <ul className="mx-auto grid max-w-content grid-cols-3 gap-x-12 gap-y-10 max-xl:grid-cols-2 max-xl:gap-x-8 max-xl:gap-y-7 max-sm:grid-cols-1">
         {items.map(([id, icon]) => (
-          <li key={id} className="advantages__item">
-            <img className="advantages__icon" src={`${ICONS}/${icon}`} alt="" />
+          <li key={id} className="flex items-start gap-4">
+            <img className="size-10 flex-none object-contain" src={`${ICONS}/${icon}`} alt="" />
             <span>
-              <span className="advantages__name">{t(`advantages.${id}.title`)}</span>
-              <span className="advantages__text">{t(`advantages.${id}.text`)}</span>
+              <span className="block text-[18px] font-semibold text-ink">{t(`advantages.${id}.title`)}</span>
+              <span className="mt-1.5 block text-[16px] leading-[1.5] text-ink-muted">{t(`advantages.${id}.text`)}</span>
             </span>
           </li>
         ))}

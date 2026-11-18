@@ -43,7 +43,7 @@ function Site() {
   return (
     <>
       <main>
-        <div className="first-screen">
+        <div className="flex min-h-dvh flex-col max-lg:min-h-0">
           <Header lang={lang} setLang={setLang} />
           <Hero lang={lang} />
         </div>

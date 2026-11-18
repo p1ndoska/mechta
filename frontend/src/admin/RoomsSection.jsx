@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
+import { messageClass, ui } from './ui.js';
 
 const LANGS = [
   ['ru', 'Русский'],
@@ -173,27 +174,27 @@ export default function RoomsSection() {
   }
 
   return (
-    <section className="admin__section">
-      <p className="admin__muted">Карточки показываются на сайте в блоке «Часто выбирают» в этом порядке.</p>
+    <section className={ui.section}>
+      <p className={ui.muted}>Карточки показываются на сайте в блоке «Часто выбирают» в этом порядке.</p>
       {rooms.length > 0 ? (
-        <ul className="admin__users">
+        <ul className={ui.list}>
           {rooms.map((room, i) => (
-            <li key={room.id} className="admin__user admin__room">
+            <li key={room.id} className={`${ui.row} items-center`}>
               {room.photoUrl ? (
-                <img className="admin__room-photo" src={room.photoUrl} alt="" />
+                <img className={ui.roomPhoto} src={room.photoUrl} alt="" />
               ) : (
-                <span className="admin__room-photo" />
+                <span className={ui.roomPhoto} />
               )}
-              <span className="admin__room-info">
+              <span className={ui.roomInfo}>
                 <span>{room.title.ru}</span>
-                <span className="admin__muted">{formatPrice(room)}</span>
+                <span className={ui.muted}>{formatPrice(room)}</span>
               </span>
-              <span className="admin__room-actions">
-                <button className="admin__icon" type="button" onClick={() => move(room, 'up')} disabled={i === 0} aria-label="Выше">
+              <span className={ui.roomActions}>
+                <button className={ui.icon} type="button" onClick={() => move(room, 'up')} disabled={i === 0} aria-label="Выше">
                   ↑
                 </button>
                 <button
-                  className="admin__icon"
+                  className={ui.icon}
                   type="button"
                   onClick={() => move(room, 'down')}
                   disabled={i === rooms.length - 1}
@@ -201,10 +202,10 @@ export default function RoomsSection() {
                 >
                   ↓
                 </button>
-                <button className="admin__link" type="button" onClick={() => edit(room)}>
+                <button className={ui.link} type="button" onClick={() => edit(room)}>
                   Изменить
                 </button>
-                <button className="admin__link" type="button" onClick={() => remove(room)}>
+                <button className={ui.link} type="button" onClick={() => remove(room)}>
                   Удалить
                 </button>
               </span>
@@ -212,31 +213,31 @@ export default function RoomsSection() {
           ))}
         </ul>
       ) : (
-        <p className="admin__muted">Номеров пока нет. Пока их нет, блок на сайте не показывается.</p>
+        <p className={ui.muted}>Номеров пока нет. Пока их нет, блок на сайте не показывается.</p>
       )}
 
-      <form className="admin__room-form" onSubmit={save}>
-        <h2 className="admin__subtitle">{editId ? 'Изменить номер' : 'Добавить номер'}</h2>
-        <div className="admin__room-photo-field">
-          {preview ? <img className="admin__room-preview" src={preview} alt="" /> : <span className="admin__room-preview" />}
-          <label className="admin__field">
+      <form className={ui.form} onSubmit={save}>
+        <h2 className={ui.subtitle}>{editId ? 'Изменить номер' : 'Добавить номер'}</h2>
+        <div className={ui.photoField}>
+          {preview ? <img className={ui.preview} src={preview} alt="" /> : <span className={ui.preview} />}
+          <label className={ui.field}>
             Фото
-            <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={choosePhoto} />
+            <input className={ui.file} key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={choosePhoto} />
           </label>
         </div>
-        <div className="admin__field">
+        <div className={ui.field}>
           Дополнительные фото (для страницы номера)
           {(photos.length > 0 || extras.length > 0) && (
-            <div className="admin__extras">
+            <div className={ui.extras}>
               {photos.map((item, i) => (
-                <span key={item.id} className="admin__extra">
-                  <img src={item.url} alt="" />
-                  <span className="admin__extra-actions">
-                    <button className="admin__icon" type="button" onClick={() => movePhoto(item, 'up')} disabled={i === 0} aria-label="Раньше">
+                <span key={item.id} className={ui.extra}>
+                  <img className={ui.extraImg} src={item.url} alt="" />
+                  <span className={ui.extraActions}>
+                    <button className={ui.icon} type="button" onClick={() => movePhoto(item, 'up')} disabled={i === 0} aria-label="Раньше">
                       ←
                     </button>
                     <button
-                      className="admin__icon"
+                      className={ui.icon}
                       type="button"
                       onClick={() => movePhoto(item, 'down')}
                       disabled={i === photos.length - 1}
@@ -244,18 +245,18 @@ export default function RoomsSection() {
                     >
                       →
                     </button>
-                    <button className="admin__icon" type="button" onClick={() => removePhoto(item)} aria-label="Удалить фото">
+                    <button className={ui.icon} type="button" onClick={() => removePhoto(item)} aria-label="Удалить фото">
                       ×
                     </button>
                   </span>
                 </span>
               ))}
               {extras.map((extra) => (
-                <span key={extra.url} className="admin__extra admin__extra--new">
-                  <img src={extra.url} alt="" />
-                  <span className="admin__extra-actions">
-                    <span className="admin__muted">новое</span>
-                    <button className="admin__icon" type="button" onClick={() => dropExtra(extra)} aria-label="Убрать фото">
+                <span key={extra.url} className={ui.extra}>
+                  <img className={ui.extraImgNew} src={extra.url} alt="" />
+                  <span className={ui.extraActions}>
+                    <span className={ui.muted}>новое</span>
+                    <button className={ui.icon} type="button" onClick={() => dropExtra(extra)} aria-label="Убрать фото">
                       ×
                     </button>
                   </span>
@@ -263,24 +264,26 @@ export default function RoomsSection() {
               ))}
             </div>
           )}
-          <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={chooseExtras} />
-          {extras.length > 0 && <span className="admin__muted">Новые фото загрузятся после нажатия «{editId ? 'Сохранить' : 'Добавить'}»</span>}
+          <input className={ui.file} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={chooseExtras} />
+          {extras.length > 0 && <span className={ui.muted}>Новые фото загрузятся после нажатия «{editId ? 'Сохранить' : 'Добавить'}»</span>}
         </div>
         {LANGS.map(([lang, name]) => (
-          <fieldset key={lang} className="admin__lang">
-            <legend>{name}</legend>
-            <label className="admin__field">
+          <fieldset key={lang} className={ui.lang}>
+            <legend className={ui.legend}>{name}</legend>
+            <label className={ui.field}>
               Название
               <input
+                className={ui.input}
                 value={form.title[lang]}
                 onChange={(e) => setForm({ ...form, title: { ...form.title, [lang]: e.target.value } })}
                 maxLength={100}
                 required
               />
             </label>
-            <label className="admin__field">
+            <label className={ui.field}>
               Описание
               <textarea
+                className={ui.textarea}
                 value={form.description[lang]}
                 onChange={(e) => setForm({ ...form, description: { ...form.description, [lang]: e.target.value } })}
                 maxLength={3000}
@@ -289,10 +292,11 @@ export default function RoomsSection() {
             </label>
           </fieldset>
         ))}
-        <div className="admin__room-price">
-          <label className="admin__field">
+        <div className={ui.priceRow}>
+          <label className={`${ui.field} w-40`}>
             Цена, BYN
             <input
+              className={ui.input}
               type="number"
               min="0.01"
               step="0.01"
@@ -301,7 +305,7 @@ export default function RoomsSection() {
               required
             />
           </label>
-          <label className="admin__check">
+          <label className={ui.check}>
             <input
               type="checkbox"
               checked={form.priceFrom}
@@ -310,13 +314,13 @@ export default function RoomsSection() {
             Писать «от» перед ценой
           </label>
         </div>
-        {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
-        <div className="admin__room-buttons">
-          <button className="admin__button" type="submit" disabled={busy}>
+        {message && <p className={messageClass(message)}>{message.text}</p>}
+        <div className={ui.buttons}>
+          <button className={ui.button} type="submit" disabled={busy}>
             {editId ? 'Сохранить' : 'Добавить'}
           </button>
           {editId && (
-            <button className="admin__link" type="button" onClick={reset}>
+            <button className={ui.link} type="button" onClick={reset}>
               Отмена
             </button>
           )}

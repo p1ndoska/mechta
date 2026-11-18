@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
+import { messageClass, ui } from './ui.js';
 
 const GROUPS = {
   advantages: 'Блок «Наши преимущества»',
@@ -41,23 +42,24 @@ export default function TextsSection() {
     }
   }
 
-  if (!texts) return <p className="admin__muted">Загрузка…</p>;
+  if (!texts) return <p className={ui.muted}>Загрузка…</p>;
 
   return (
-    <section className="admin__section">
-      <form className="admin__room-form" onSubmit={save}>
-        <p className="admin__muted">Если поле EN или BE пустое, на сайте покажется русский текст.</p>
+    <section className={ui.section}>
+      <form className={ui.form} onSubmit={save}>
+        <p className={ui.muted}>Если поле EN или BE пустое, на сайте покажется русский текст.</p>
         {texts.map((item, i) => {
           const group = item.key.split('.')[0];
           const groupStart = i === 0 || texts[i - 1].key.split('.')[0] !== group;
           return [
-            groupStart && <h2 key={group} className="admin__subtitle">{GROUPS[group]}</h2>,
-          <fieldset key={item.key} className="admin__lang">
-            <legend>{item.label}</legend>
+            groupStart && <h2 key={group} className={ui.subtitle}>{GROUPS[group]}</h2>,
+          <fieldset key={item.key} className={ui.lang}>
+            <legend className={ui.legend}>{item.label}</legend>
             {LANGS.map(([lang, name]) => (
-              <label key={lang} className="admin__text-row">
-                <span>{name}</span>
+              <label key={lang} className={ui.textRow}>
+                <span className={ui.textRowLabel}>{name}</span>
                 <input
+                  className={ui.textRowInput}
                   value={item[lang]}
                   onChange={(e) => change(item.key, lang, e.target.value)}
                   maxLength={300}
@@ -68,9 +70,9 @@ export default function TextsSection() {
           </fieldset>,
           ];
         })}
-        {message && <p className={message.ok ? 'admin__success' : 'admin__error'}>{message.text}</p>}
-        <div className="admin__room-buttons">
-          <button className="admin__button" type="submit" disabled={busy}>
+        {message && <p className={messageClass(message)}>{message.text}</p>}
+        <div className={ui.buttons}>
+          <button className={ui.button} type="submit" disabled={busy}>
             Сохранить
           </button>
         </div>

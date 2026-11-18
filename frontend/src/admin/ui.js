@@ -1,0 +1,53 @@
+// Классы Tailwind для элементов панели администратора, общие для всех вкладок
+const input =
+  'w-full rounded-sm border border-line px-3 py-2.5 focus:border-olive-light focus:outline-2 focus:-outline-offset-1 focus:outline-olive-light';
+
+export const ui = {
+  page: 'flex min-h-screen items-center justify-center bg-admin-bg p-6 text-text max-md:p-3',
+  card: 'flex w-full max-w-[360px] flex-col gap-3.5 rounded-md border border-admin-line bg-white p-8 shadow-panel max-md:p-5',
+  cardWide: 'flex w-full max-w-[680px] flex-col gap-3.5 rounded-md border border-admin-line bg-white p-8 shadow-panel max-md:p-5',
+  top: 'flex items-baseline gap-3 max-md:flex-wrap max-md:gap-y-1',
+  title: 'text-[22px] font-bold',
+  subtitle: 'text-[17px] font-bold',
+  section: 'flex flex-col gap-3.5',
+  tabs: 'flex flex-wrap gap-1 border-b border-admin-line',
+  tab: '-mb-px cursor-pointer rounded-t-sm border bg-transparent px-4 py-2.5 text-[15px] hover:text-olive focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-olive-light',
+  tabIdle: 'border-transparent text-admin-tab',
+  tabActive: 'border-admin-line border-b-white bg-white font-semibold text-olive',
+  field: 'flex min-w-0 flex-col gap-1.5 text-[14px]',
+  input,
+  textarea: `${input} resize-y`,
+  file: `${input} file:mr-2 file:cursor-pointer file:rounded-sm file:border file:border-line file:bg-admin-bg file:px-2.5 file:py-0.5 hover:file:bg-admin-divider`,
+  button:
+    'cursor-pointer rounded-sm bg-olive px-4 py-[11px] font-semibold text-white hover:bg-olive-hover disabled:cursor-default disabled:opacity-60',
+  link: 'cursor-pointer bg-transparent p-0 text-olive underline',
+  muted: 'text-[14px] text-admin-muted',
+  error: 'text-[14px] text-error',
+  success: 'text-[14px] text-success',
+  list: 'rounded-sm border border-admin-divider',
+  row: 'flex gap-3 px-3 py-2.5 text-[14px] not-first:border-t not-first:border-admin-divider max-md:flex-wrap max-md:gap-y-1',
+  inlineForm: 'grid grid-cols-[1fr_1fr_1fr_auto] items-end gap-2.5 max-md:grid-cols-1',
+  roomPhoto: 'h-15 w-12 flex-none rounded-[3px] bg-admin-divider object-cover',
+  roomInfo: 'flex min-w-0 flex-col gap-0.5',
+  roomActions: 'ml-auto flex items-center gap-3 max-md:basis-full max-md:justify-end',
+  icon: 'size-7 cursor-pointer rounded-sm border border-line bg-white p-0 text-olive disabled:cursor-default disabled:opacity-35',
+  form: 'flex flex-col gap-3.5 border-t border-admin-divider pt-[18px]',
+  photoField: 'flex items-center gap-4',
+  preview: 'h-30 w-24 flex-none rounded-sm bg-admin-divider object-cover',
+  priceRow: 'flex flex-wrap items-end gap-4',
+  check: 'flex items-center gap-2 pb-[11px] text-[14px]',
+  buttons: 'flex items-center gap-4',
+  extras: 'flex flex-wrap gap-2.5',
+  extra: 'flex w-26 flex-col gap-1',
+  extraImg: 'h-[78px] w-26 rounded-[3px] object-cover',
+  extraImgNew: 'h-[78px] w-26 rounded-[3px] object-cover outline-2 -outline-offset-2 outline-olive-light outline-dashed',
+  extraActions: 'flex items-center justify-between gap-1',
+  lang: 'flex min-w-0 flex-col gap-3 rounded-sm border border-admin-line px-3.5 pt-3 pb-3.5',
+  legend: 'px-1.5 text-[13px] font-semibold text-olive',
+  textRow: 'flex items-center gap-2.5 text-[13px]',
+  textRowLabel: 'w-6 flex-none font-semibold text-admin-label',
+  textRowLabelWide: 'w-16 flex-none font-semibold text-admin-label',
+  textRowInput: 'min-w-0 flex-1 rounded-sm border border-line px-2.5 py-2 text-[14px]',
+};
+
+export const messageClass = (message) => (message.ok ? ui.success : ui.error);

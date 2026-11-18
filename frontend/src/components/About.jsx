@@ -1,4 +1,3 @@
-import './About.css';
 
 const texts = {
   ru: {
@@ -21,13 +20,13 @@ const texts = {
 export default function About({ lang }) {
   const t = texts[lang];
   return (
-    <section className="about" id="about">
-      <div className="about__inner">
-        <div className="about__content">
-          <h2 className="about__title">{t.title}</h2>
-          <p className="about__text">{t.text}</p>
+    <section className="bg-olive px-8 py-18 text-wheat-text max-xl:px-5 max-xl:py-12" id="about">
+      <div className="mx-auto grid max-w-content grid-cols-2 items-center gap-14 max-xl:grid-cols-1 max-xl:gap-7">
+        <div>
+          <h2 className="text-title leading-[1.2] font-medium text-wheat max-xl:text-title-sm">{t.title}</h2>
+          <p className="mt-7 text-[17px] leading-[1.7] max-xl:mt-[18px] max-xl:text-[16px]">{t.text}</p>
         </div>
-        <img className="about__photo" src="/images/about/atrium.jpg" alt={t.alt} loading="lazy" />
+        <img className="block aspect-[4/3] w-full rounded-lg object-cover" src="/images/about/atrium.jpg" alt={t.alt} loading="lazy" />
       </div>
     </section>
   );

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './Ratings.css';
 
 // Показываются, пока не пришёл ответ /api/ratings или если backend недоступен
 const fallback = {
@@ -42,7 +41,7 @@ function roundDown(n) {
 
 function Star() {
   return (
-    <svg className="ratings__star" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="size-[26px]" viewBox="0 0 24 24" aria-hidden="true">
       <defs>
         <linearGradient id="ratings-star" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#ffe17a" />
@@ -60,6 +59,12 @@ function Star() {
   );
 }
 
+const item =
+  'group flex flex-col items-center justify-center gap-2 px-4 py-1.5 text-center not-first:border-l not-first:border-white/18 max-md:px-0 max-md:py-3.5 max-md:not-first:border-t max-md:not-first:border-l-0';
+const value = 'inline-flex items-center gap-1.5 font-semibold leading-none';
+const caption = 'max-w-40 text-[12px] leading-[1.5] text-cream-text';
+const source = 'text-gold group-hover:underline';
+
 export default function Ratings({ lang }) {
   const [data, setData] = useState(fallback);
   const t = texts[lang];
@@ -75,29 +80,29 @@ export default function Ratings({ lang }) {
   const totalRatings = data.yandex.ratings + data.google.ratings;
 
   return (
-    <section className="ratings">
-      <div className="ratings__inner">
-        <a className="ratings__item" href={data.yandex.url} target="_blank" rel="noreferrer">
-          <span className="ratings__value">
+    <section className="bg-olive text-white">
+      <div className="mx-auto box-content grid max-w-ratings grid-cols-3 px-6 py-[18px] max-md:grid-cols-1 max-md:py-2">
+        <a className={item} href={data.yandex.url} target="_blank" rel="noreferrer">
+          <span className={`${value} text-[26px]`}>
             {format(data.yandex.rating)} <Star />
           </span>
-          <span className="ratings__caption">
-            {t.rating} <span className="ratings__source">{t.yandex}</span>
+          <span className={caption}>
+            {t.rating} <span className={source}>{t.yandex}</span>
           </span>
         </a>
 
-        <a className="ratings__item" href={data.google.url} target="_blank" rel="noreferrer">
-          <span className="ratings__value">
+        <a className={item} href={data.google.url} target="_blank" rel="noreferrer">
+          <span className={`${value} text-[26px]`}>
             {format(data.google.rating)} <Star />
           </span>
-          <span className="ratings__caption">
-            {t.rating} <span className="ratings__source">{t.google}</span>
+          <span className={caption}>
+            {t.rating} <span className={source}>{t.google}</span>
           </span>
         </a>
 
-        <div className="ratings__item">
-          <span className="ratings__value ratings__value--small">{t.ratings(roundDown(totalRatings))}</span>
-          <span className="ratings__caption">{t.reviews(roundDown(data.yandex.reviews))}</span>
+        <div className={item}>
+          <span className={`${value} text-[20px]`}>{t.ratings(roundDown(totalRatings))}</span>
+          <span className={caption}>{t.reviews(roundDown(data.yandex.reviews))}</span>
         </div>
       </div>
     </section>

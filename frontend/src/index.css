@@ -1,20 +1,8 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-}
+@import 'tailwindcss';
+@import './theme.css';
 
-
-/* Шапка + блок с фото вместе занимают ровно высоту экрана */
-.first-screen {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-/* На узком экране первый экран не растягивается: высота блока с фото по пропорциям фото */
-@media (max-width: 800px) {
-  .first-screen {
-    min-height: 0;
+@layer base {
+  body {
+    line-height: normal;
   }
 }
