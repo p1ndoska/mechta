@@ -8,10 +8,12 @@ import Advantages from './components/Advantages.jsx';
 import Discounts from './components/Discounts.jsx';
 import Booking from './components/Booking.jsx';
 import RoomPage from './components/RoomPage.jsx';
+import RoomsPage from './components/RoomsPage.jsx';
 import Admin from './admin/Admin.jsx';
 
 const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
 const roomId = window.location.pathname.match(/^\/rooms\/(\d+)\/?$/)?.[1];
+const isRoomsPage = /^\/rooms\/?$/.test(window.location.pathname);
 const languages = ['ru', 'en', 'be'];
 
 export default function App() {
@@ -36,6 +38,15 @@ function Site() {
       <main>
         <Header lang={lang} setLang={setLang} />
         <RoomPage id={roomId} lang={lang} />
+      </main>
+    );
+  }
+
+  if (isRoomsPage) {
+    return (
+      <main>
+        <Header lang={lang} setLang={setLang} />
+        <RoomsPage lang={lang} />
       </main>
     );
   }

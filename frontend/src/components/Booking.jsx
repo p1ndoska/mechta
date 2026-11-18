@@ -27,7 +27,7 @@ export default function Booking({ lang }) {
           {t('booking.text')}
         </p>
         <a
-          href="#rooms"
+          href="/rooms"
           className="inline-block rounded-full bg-button-light px-[26px] py-2.5 text-[length:clamp(12px,0.9vw,14px)] font-semibold text-espresso transition-colors duration-200 hover:bg-button-light-hover max-lg:px-5 max-lg:py-[9px] max-lg:text-[13px]"
         >
           {t('booking.button')}

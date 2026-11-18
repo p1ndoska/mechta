@@ -92,7 +92,7 @@ export default function RoomPage({ id, lang }) {
   return (
     <section className="box-content min-h-[70vh] bg-burgundy px-8 pt-10 pb-20 text-sand-light max-xl:px-5 max-xl:pt-7 max-xl:pb-14">
       <div className="mx-auto max-w-content">
-        <a className="mb-7 inline-block text-[16px] text-sand hover:underline" href="/#rooms">
+        <a className="mb-7 inline-block text-[16px] text-sand hover:underline" href="/rooms">
           ← {t.back}
         </a>
         {room === undefined && <p className={text}>{t.loading}</p>}
