@@ -81,7 +81,7 @@ export default function Ratings({ lang }) {
 
   return (
     <section className="bg-olive text-white">
-      <div className="mx-auto box-content grid max-w-ratings grid-cols-3 px-6 py-[18px] max-md:grid-cols-1 max-md:py-2">
+      <div className="mx-auto box-content grid max-w-content grid-cols-3 px-6 py-[18px] max-md:grid-cols-1 max-md:py-2">
         <a className={item} href={data.yandex.url} target="_blank" rel="noreferrer">
           <span className={`${value} text-[26px]`}>
             {format(data.yandex.rating)} <Star />
