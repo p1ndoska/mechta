@@ -9,7 +9,9 @@ import Discounts from './components/Discounts.jsx';
 import Booking from './components/Booking.jsx';
 import RoomPage from './components/RoomPage.jsx';
 import RoomsPage from './components/RoomsPage.jsx';
+import CookieBanner from './components/CookieBanner.jsx';
 import Admin from './admin/Admin.jsx';
+import { canStore } from './consent.js';
 
 const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
 const roomId = window.location.pathname.match(/^\/rooms\/(\d+)\/?$/)?.[1];
@@ -22,17 +24,26 @@ export default function App() {
 }
 
 function Site() {
-  // Язык запоминается, чтобы не сбрасываться при переходе на страницу номера и обратно
+  // Язык запоминается, только если посетитель принял cookie
   const [lang, setLang] = useState(() => {
-    const saved = localStorage.getItem('lang');
+    const saved = canStore() && localStorage.getItem('lang');
     return languages.includes(saved) ? saved : 'ru';
   });
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    localStorage.setItem('lang', lang);
+    if (canStore()) localStorage.setItem('lang', lang);
   }, [lang]);
 
+  return (
+    <>
+      <Page lang={lang} setLang={setLang} />
+      <CookieBanner lang={lang} onAccept={() => localStorage.setItem('lang', lang)} />
+    </>
+  );
+}
+
+function Page({ lang, setLang }) {
   if (roomId) {
     return (
       <main>
@@ -52,19 +63,17 @@ function Site() {
   }
 
   return (
-    <>
-      <main>
-        <div className="flex min-h-dvh flex-col max-lg:min-h-0">
-          <Header lang={lang} setLang={setLang} />
-          <Hero lang={lang} />
-        </div>
-        <Ratings lang={lang} />
-        <Rooms lang={lang} />
-        <About lang={lang} />
-        <Advantages lang={lang} />
-        <Discounts lang={lang} />
-        <Booking lang={lang} />
-      </main>
-    </>
+    <main>
+      <div className="flex min-h-dvh flex-col max-lg:min-h-0">
+        <Header lang={lang} setLang={setLang} />
+        <Hero lang={lang} />
+      </div>
+      <Ratings lang={lang} />
+      <Rooms lang={lang} />
+      <About lang={lang} />
+      <Advantages lang={lang} />
+      <Discounts lang={lang} />
+      <Booking lang={lang} />
+    </main>
   );
 }

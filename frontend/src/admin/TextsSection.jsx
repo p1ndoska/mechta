@@ -6,6 +6,7 @@ const GROUPS = {
   advantages: 'Блок «Наши преимущества»',
   discounts: 'Блок «Скидки»',
   booking: 'Блок «Готовы к путешествию?»',
+  cookies: 'Плашка о cookie',
 };
 
 const LANGS = [

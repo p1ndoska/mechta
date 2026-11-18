@@ -21,6 +21,9 @@ const DEFAULTS = [
   ['booking.title', 'Заголовок', 'Готовы к путешествию?', 'Ready to travel?', 'Гатовыя да падарожжа?'],
   ['booking.text', 'Текст', 'Забронируйте номер прямо сейчас и наслаждайтесь комфортом по доступной цене.', 'Book a room right now and enjoy comfort at an affordable price.', 'Забраніруйце нумар проста зараз і атрымлівайце асалоду ад камфорту па даступнай цане.'],
   ['booking.button', 'Кнопка', 'Выбрать гостиничный номер!', 'Choose a hotel room!', 'Выбраць гасцінічны нумар!'],
+  ['cookies.text', 'Текст', 'Мы используем файлы cookie, чтобы сайт работал удобнее: например, запоминаем выбранный язык. Вы можете принять или отклонить необязательные cookie.', 'We use cookies to make the site more convenient, for example to remember your language. You can accept or decline optional cookies.', 'Мы выкарыстоўваем файлы cookie, каб сайтам было зручней карыстацца: напрыклад, запамінаем абраную мову. Вы можаце прыняць або адхіліць неабавязковыя cookie.'],
+  ['cookies.accept', 'Кнопка «Принять»', 'Принять', 'Accept', 'Прыняць'],
+  ['cookies.reject', 'Кнопка «Отклонить»', 'Отклонить', 'Decline', 'Адхіліць'],
 ].map(([key, label, ru, en, be]) => ({ key, label, ru, en, be }));
 const KEYS = new Set(DEFAULTS.map((item) => item.key));
 
