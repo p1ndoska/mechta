@@ -7,6 +7,7 @@ const GROUPS = {
   discounts: 'Блок «Скидки»',
   booking: 'Блок «Готовы к путешествию?»',
   cookies: 'Плашка о cookie',
+  legal: 'Страницы из подвала сайта',
 };
 
 const LANGS = [
@@ -59,13 +60,24 @@ export default function TextsSection() {
             {LANGS.map(([lang, name]) => (
               <label key={lang} className={ui.textRow}>
                 <span className={ui.textRowLabel}>{name}</span>
-                <input
-                  className={ui.textRowInput}
-                  value={item[lang]}
-                  onChange={(e) => change(item.key, lang, e.target.value)}
-                  maxLength={300}
-                  required={lang === 'ru'}
-                />
+                {item.long ? (
+                  <textarea
+                    className={`${ui.textRowInput} resize-y`}
+                    rows={10}
+                    value={item[lang]}
+                    onChange={(e) => change(item.key, lang, e.target.value)}
+                    maxLength={20000}
+                    required={lang === 'ru'}
+                  />
+                ) : (
+                  <input
+                    className={ui.textRowInput}
+                    value={item[lang]}
+                    onChange={(e) => change(item.key, lang, e.target.value)}
+                    maxLength={300}
+                    required={lang === 'ru'}
+                  />
+                )}
               </label>
             ))}
           </fieldset>,

@@ -24,8 +24,12 @@ const DEFAULTS = [
   ['cookies.text', 'Текст', 'Мы используем файлы cookie, чтобы сайт работал удобнее: например, запоминаем выбранный язык. Вы можете принять или отклонить необязательные cookie.', 'We use cookies to make the site more convenient, for example to remember your language. You can accept or decline optional cookies.', 'Мы выкарыстоўваем файлы cookie, каб сайтам было зручней карыстацца: напрыклад, запамінаем абраную мову. Вы можаце прыняць або адхіліць неабавязковыя cookie.'],
   ['cookies.accept', 'Кнопка «Принять»', 'Принять', 'Accept', 'Прыняць'],
   ['cookies.reject', 'Кнопка «Отклонить»', 'Отклонить', 'Decline', 'Адхіліць'],
-].map(([key, label, ru, en, be]) => ({ key, label, ru, en, be }));
-const KEYS = new Set(DEFAULTS.map((item) => item.key));
+  ['legal.personal', 'Защита персональных данных', 'Текст страницы будет добавлен позже.', 'The page text will be added later.', 'Тэкст старонкі будзе дададзены пазней.', true],
+  ['legal.privacy', 'Политика конфиденциальности', 'Текст страницы будет добавлен позже.', 'The page text will be added later.', 'Тэкст старонкі будзе дададзены пазней.', true],
+].map(([key, label, ru, en, be, long = false]) => ({ key, label, ru, en, be, long }));
+const BY_KEY = new Map(DEFAULTS.map((item) => [item.key, item]));
+// Длинные тексты (страницы) — до 20000 символов, обычные надписи — до 300
+const maxLength = (key) => (BY_KEY.get(key).long ? 20000 : 300);
 
 async function allTexts() {
   const saved = new Map((await prisma.siteText.findMany()).map((row) => [row.key, row]));
@@ -56,12 +60,12 @@ function adminRouter(requireAdmin) {
     const body = req.body ?? {};
     const rows = [];
     for (const [key, value] of Object.entries(body)) {
-      if (!KEYS.has(key)) return res.status(400).json({ error: `Неизвестная надпись: ${key}` });
+      if (!BY_KEY.has(key)) return res.status(400).json({ error: `Неизвестная надпись: ${key}` });
       const row = { key };
       for (const lang of ['ru', 'en', 'be']) {
         const text = value?.[lang];
-        if (typeof text !== 'string' || text.length > 300) {
-          return res.status(400).json({ error: 'Надпись: не длиннее 300 символов' });
+        if (typeof text !== 'string' || text.length > maxLength(key)) {
+          return res.status(400).json({ error: `Надпись: не длиннее ${maxLength(key)} символов` });
         }
         row[lang] = text.trim();
       }

@@ -9,6 +9,8 @@ import Discounts from './components/Discounts.jsx';
 import Booking from './components/Booking.jsx';
 import RoomPage from './components/RoomPage.jsx';
 import RoomsPage from './components/RoomsPage.jsx';
+import Footer from './components/Footer.jsx';
+import LegalPage from './components/LegalPage.jsx';
 import CookieBanner from './components/CookieBanner.jsx';
 import Admin from './admin/Admin.jsx';
 import { canStore } from './consent.js';
@@ -16,6 +18,7 @@ import { canStore } from './consent.js';
 const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
 const roomId = window.location.pathname.match(/^\/rooms\/(\d+)\/?$/)?.[1];
 const isRoomsPage = /^\/rooms\/?$/.test(window.location.pathname);
+const legalPage = { '/personal-data': 'personal', '/privacy': 'privacy' }[window.location.pathname.replace(/\/$/, '')];
 const languages = ['ru', 'en', 'be'];
 
 export default function App() {
@@ -35,11 +38,15 @@ function Site() {
     if (canStore()) localStorage.setItem('lang', lang);
   }, [lang]);
 
+  // Подвал прижат к низу экрана даже на коротких страницах
   return (
-    <>
-      <Page lang={lang} setLang={setLang} />
+    <div className="flex min-h-dvh flex-col">
+      <div className="flex-1">
+        <Page lang={lang} setLang={setLang} />
+      </div>
+      <Footer lang={lang} />
       <CookieBanner lang={lang} onAccept={() => localStorage.setItem('lang', lang)} />
-    </>
+    </div>
   );
 }
 
@@ -49,6 +56,15 @@ function Page({ lang, setLang }) {
       <main>
         <Header lang={lang} setLang={setLang} />
         <RoomPage id={roomId} lang={lang} />
+      </main>
+    );
+  }
+
+  if (legalPage) {
+    return (
+      <main>
+        <Header lang={lang} setLang={setLang} />
+        <LegalPage page={legalPage} lang={lang} />
       </main>
     );
   }
