@@ -32,14 +32,14 @@ function Map({ coords, text, button }) {
     <div className="rounded-2xl bg-map-card p-5 max-sm:p-3">
       {show ? (
         <iframe
-          className="block h-[clamp(320px,calc(100dvh-400px),680px)] w-full rounded-lg border-0 max-lg:aspect-4/3 max-lg:h-auto"
+          className="block h-[290px] w-full rounded-lg border-0"
           src={`https://yandex.ru/map-widget/v1/?ll=${point}&z=15&pt=${point},pm2rdm`}
           title="Яндекс Карты"
           loading="lazy"
           allowFullScreen
         />
       ) : (
-        <div className="flex h-[clamp(320px,calc(100dvh-400px),680px)] flex-col items-center justify-center max-lg:aspect-4/3 max-lg:h-auto gap-4 px-4 text-center text-[16px] text-ink">
+        <div className="flex h-[290px] flex-col items-center justify-center gap-4 px-4 text-center text-[16px] text-ink">
           <p>{text}</p>
           <button
             type="button"
@@ -85,7 +85,7 @@ export default function ContactsPage({ lang, header }) {
       </section>
 
       <section className="flex flex-[3] items-center bg-olive px-6 py-8 max-lg:px-4 max-lg:py-10">
-        <div className="mx-auto grid w-full max-w-content grid-cols-[minmax(0,1fr)_minmax(0,2fr)] items-center gap-12 max-xl:gap-8 max-lg:grid-cols-1 max-lg:gap-8">
+        <div className="mx-auto grid w-full max-w-content grid-cols-[minmax(0,3fr)_minmax(0,5fr)] items-center gap-12 max-xl:gap-8 max-lg:grid-cols-1 max-lg:gap-8">
           <div>
             <h2 className="mb-8 text-title leading-[1.2] font-medium text-cream max-lg:mb-6 max-lg:text-title-sm">{t('contacts.heading')}</h2>
             <dl className="flex flex-col gap-6 text-[18px] text-cream-text max-lg:gap-5 max-lg:text-[16px]">
