@@ -51,7 +51,7 @@ export default function RoomsPage({ lang }) {
                   <a className={`${button} bg-forest hover:bg-forest-hover`} href={`/rooms/${room.id}`}>
                     {t.book}
                   </a>
-                  <a className={`${button} bg-burgundy hover:bg-burgundy-hover`} href={`/rooms/${room.id}`}>
+                  <a className={`${button} bg-room-accent hover:bg-room-accent-hover`} href={`/rooms/${room.id}`}>
                     {t.more} <span aria-hidden="true">→</span>
                   </a>
                 </div>
