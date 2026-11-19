@@ -55,7 +55,7 @@ function Map({ coords, text, button }) {
 }
 
 // Надписи меняются в панели администратора, вкладка «Тексты сайта»
-// Шапка и фото вместе занимают высоту экрана, как на главной
+// Шапка, фото и блок «Связаться» вместе занимают высоту экрана, фото растягивается на оставшееся место
 export default function ContactsPage({ lang, header }) {
   const [texts, setTexts] = useState(null);
 
@@ -77,14 +77,12 @@ export default function ContactsPage({ lang, header }) {
   ];
 
   return (
-    <>
-      <div className="flex min-h-dvh flex-col">
-        {header}
-        <section className="relative flex flex-1 flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
-          <h1 className="relative mb-3 text-[length:clamp(28px,2.6vw,40px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
-          <p className="relative text-[13px] text-cream-text">{t('contacts.subtitle')}</p>
-        </section>
-      </div>
+    <div className="flex min-h-dvh flex-col">
+      {header}
+      <section className="relative flex flex-1 flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
+        <h1 className="relative mb-3 text-[length:clamp(28px,2.6vw,40px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
+        <p className="relative text-[13px] text-cream-text">{t('contacts.subtitle')}</p>
+      </section>
 
       <section className="bg-olive px-6 py-14 max-lg:px-4 max-lg:py-10">
         <div className="mx-auto grid max-w-[880px] grid-cols-[1fr_minmax(0,420px)] items-start gap-16 max-lg:grid-cols-1 max-lg:gap-8">
@@ -105,6 +103,6 @@ export default function ContactsPage({ lang, header }) {
           <Map coords={t('contacts.coords')} text={t('contacts.map.text')} button={t('contacts.map.button')} />
         </div>
       </section>
-    </>
+    </div>
   );
 }
