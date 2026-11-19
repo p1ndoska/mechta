@@ -115,6 +115,23 @@ export default function RoomPage({ id, lang }) {
                 {pick(room.description, lang) && <p className={text}>{pick(room.description, lang)}</p>}
               </div>
             </div>
+            {room.photos.length > 0 && (
+              <>
+                <h2 className={subtitle}>{t.photos}</h2>
+                <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-xl:gap-2.5">
+                  {room.photos.map((photo, i) => (
+                    <button
+                      key={photo.id}
+                      className={photoButton}
+                      type="button"
+                      onClick={() => setOpen(i + (room.photoUrl ? 1 : 0))}
+                    >
+                      <img className="block aspect-[4/3] w-full rounded-md object-cover transition-opacity duration-150 group-hover:opacity-85" src={photo.url} alt="" loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
             {room.amenities.length > 0 && (
               <>
                 <h2 className={subtitle}>{t.amenities}</h2>
@@ -154,23 +171,6 @@ export default function RoomPage({ id, lang }) {
                     </li>
                   ))}
                 </ul>
-              </>
-            )}
-            {room.photos.length > 0 && (
-              <>
-                <h2 className={subtitle}>{t.photos}</h2>
-                <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-xl:gap-2.5">
-                  {room.photos.map((photo, i) => (
-                    <button
-                      key={photo.id}
-                      className={photoButton}
-                      type="button"
-                      onClick={() => setOpen(i + (room.photoUrl ? 1 : 0))}
-                    >
-                      <img className="block aspect-[4/3] w-full rounded-md object-cover transition-opacity duration-150 group-hover:opacity-85" src={photo.url} alt="" loading="lazy" />
-                    </button>
-                  ))}
-                </div>
               </>
             )}
           </>
