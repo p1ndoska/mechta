@@ -32,14 +32,14 @@ function Map({ coords, text, button }) {
     <div className="rounded-2xl bg-map-card p-5 max-sm:p-3">
       {show ? (
         <iframe
-          className="block aspect-16/10 w-full rounded-lg border-0 max-lg:aspect-4/3"
+          className="block h-[clamp(320px,calc(100dvh-400px),680px)] w-full rounded-lg border-0 max-lg:aspect-4/3 max-lg:h-auto"
           src={`https://yandex.ru/map-widget/v1/?ll=${point}&z=15&pt=${point},pm2rdm`}
           title="Яндекс Карты"
           loading="lazy"
           allowFullScreen
         />
       ) : (
-        <div className="flex aspect-16/10 flex-col items-center max-lg:aspect-4/3 justify-center gap-4 px-4 text-center text-[16px] text-ink">
+        <div className="flex h-[clamp(320px,calc(100dvh-400px),680px)] flex-col items-center justify-center max-lg:aspect-4/3 max-lg:h-auto gap-4 px-4 text-center text-[16px] text-ink">
           <p>{text}</p>
           <button
             type="button"
@@ -79,13 +79,13 @@ export default function ContactsPage({ lang, header }) {
   return (
     <div className="flex min-h-dvh flex-col">
       {header}
-      <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
+      <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-8 text-center min-h-[160px] max-lg:min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
         <h1 className="relative mb-3 text-[length:clamp(30px,3.2vw,48px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
         <p className="relative text-[16px] text-cream-text max-lg:text-[15px]">{t('contacts.subtitle')}</p>
       </section>
 
-      <section className="flex flex-[3] items-center bg-olive px-6 py-10 max-lg:px-4 max-lg:py-10">
-        <div className="mx-auto grid w-full max-w-content grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-center gap-16 max-xl:gap-10 max-lg:grid-cols-1 max-lg:gap-8">
+      <section className="flex flex-[3] items-center bg-olive px-6 py-8 max-lg:px-4 max-lg:py-10">
+        <div className="mx-auto grid w-full max-w-content grid-cols-[minmax(0,1fr)_minmax(0,2fr)] items-center gap-12 max-xl:gap-8 max-lg:grid-cols-1 max-lg:gap-8">
           <div>
             <h2 className="mb-8 text-title leading-[1.2] font-medium text-cream max-lg:mb-6 max-lg:text-title-sm">{t('contacts.heading')}</h2>
             <dl className="flex flex-col gap-6 text-[18px] text-cream-text max-lg:gap-5 max-lg:text-[16px]">
