@@ -41,20 +41,8 @@ function roundDown(n) {
 
 function Star() {
   return (
-    <svg className="size-[26px]" viewBox="0 0 24 24" aria-hidden="true">
-      <defs>
-        <linearGradient id="ratings-star" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffe17a" />
-          <stop offset="1" stopColor="#f5b301" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"
-        fill="url(#ratings-star)"
-        stroke="#e0a100"
-        strokeWidth="0.8"
-        strokeLinejoin="round"
-      />
+    <svg className="size-[26px] fill-rating-star" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z" />
     </svg>
   );
 }
