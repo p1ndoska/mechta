@@ -74,8 +74,7 @@ function Page({ lang, setLang }) {
   if (isContactsPage) {
     return (
       <main>
-        <Header lang={lang} setLang={setLang} />
-        <ContactsPage lang={lang} />
+        <ContactsPage lang={lang} header={<Header lang={lang} setLang={setLang} />} />
       </main>
     );
   }
