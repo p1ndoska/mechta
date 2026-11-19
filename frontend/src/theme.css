@@ -48,6 +48,8 @@
   /* Фон под фото, пока оно загружается, и фильтры поверх фото */
   --color-photo-fallback: #3a3a3a;
   --color-footer: #928e8b;
+  --color-contacts-tint: rgb(20 40 10 / 0.15);
+  --color-map-card: #eef0f5;
   --color-dusk: #3b4155;
   --color-hero-tint: rgb(160 60 20 / 0.1);
   --color-booking-tint: rgb(40 46 80 / 0.35);
@@ -101,4 +103,5 @@
 :root {
   --image-hero: url('/images/photos/photo_1_2026-09-02_11-00-40-2048x1536.jpg');
   --image-booking: url('/images/photos/full-ph-2048x714.png');
+  --image-contacts: url('/images/photos/photo_2026-09-08_08-51-52.jpg');
 }

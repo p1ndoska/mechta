@@ -11,6 +11,7 @@ import RoomPage from './components/RoomPage.jsx';
 import RoomsPage from './components/RoomsPage.jsx';
 import Footer from './components/Footer.jsx';
 import LegalPage from './components/LegalPage.jsx';
+import ContactsPage from './components/ContactsPage.jsx';
 import CookieBanner from './components/CookieBanner.jsx';
 import Admin from './admin/Admin.jsx';
 import { canStore } from './consent.js';
@@ -19,6 +20,7 @@ const isAdmin = /^\/administrator(\/|$)/.test(window.location.pathname);
 const roomId = window.location.pathname.match(/^\/rooms\/(\d+)\/?$/)?.[1];
 const isRoomsPage = /^\/rooms\/?$/.test(window.location.pathname);
 const legalPage = { '/personal-data': 'personal', '/privacy': 'privacy' }[window.location.pathname.replace(/\/$/, '')];
+const isContactsPage = /^\/contacts\/?$/.test(window.location.pathname);
 const languages = ['ru', 'en', 'be'];
 
 export default function App() {
@@ -65,6 +67,15 @@ function Page({ lang, setLang }) {
       <main>
         <Header lang={lang} setLang={setLang} />
         <LegalPage page={legalPage} lang={lang} />
+      </main>
+    );
+  }
+
+  if (isContactsPage) {
+    return (
+      <main>
+        <Header lang={lang} setLang={setLang} />
+        <ContactsPage lang={lang} />
       </main>
     );
   }

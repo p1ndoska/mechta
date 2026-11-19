@@ -7,7 +7,7 @@ export const footerTexts = {
 
 const links = [
   ['home', '/#home'],
-  ['contacts', '/#contacts'],
+  ['contacts', '/contacts'],
   ['rooms', '/rooms'],
   ['personal', '/personal-data'],
   ['privacy', '/privacy'],

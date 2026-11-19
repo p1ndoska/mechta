@@ -7,6 +7,7 @@ const GROUPS = {
   discounts: 'Блок «Скидки»',
   booking: 'Блок «Готовы к путешествию?»',
   cookies: 'Плашка о cookie',
+  contacts: 'Страница «Контакты»',
   legal: 'Страницы из подвала сайта',
 };
 
