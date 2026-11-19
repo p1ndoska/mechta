@@ -38,7 +38,7 @@ export default function RoomsPage({ lang }) {
         {rooms?.map((room) => (
           <article
             key={room.id}
-            className="grid grid-cols-[minmax(0,47fr)_minmax(0,53fr)] overflow-hidden rounded-lg border-6 border-olive/70 bg-white max-xl:grid-cols-1 max-xl:border-4"
+            className="grid grid-cols-[minmax(0,47fr)_minmax(0,53fr)] overflow-hidden rounded-lg border-6 border-olive/30 bg-white max-xl:grid-cols-1 max-xl:border-4"
           >
             <div className="flex items-center justify-center px-10 py-12 max-xl:order-last max-xl:px-5 max-xl:py-7">
               <div className="w-full max-w-[340px]">
