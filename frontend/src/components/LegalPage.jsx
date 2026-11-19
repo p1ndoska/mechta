@@ -37,7 +37,7 @@ function Block({ type, text, name }) {
         {name && <span className="mt-1 block">{name}</span>}
       </h3>
     );
-  if (type === 'section') return <h3 className="mt-7 mb-1 text-[17px] leading-snug font-semibold text-indigo">{text}</h3>;
+  if (type === 'section') return <h3 className="mt-7 mb-1 text-[17px] leading-snug first:mt-0 font-semibold text-indigo">{text}</h3>;
   if (type === 'item') return <p className="mt-1 pl-5 before:-ml-4 before:inline-block before:w-4 before:content-['•']">{text}</p>;
   return <p className="mt-3">{text}</p>;
 }

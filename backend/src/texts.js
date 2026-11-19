@@ -30,7 +30,7 @@ const DEFAULTS = [
   ['cookies.accept', 'Кнопка «Принять»', 'Принять', 'Accept', 'Прыняць'],
   ['cookies.reject', 'Кнопка «Отклонить»', 'Отклонить', 'Decline', 'Адхіліць'],
   ['legal.personal', 'Защита персональных данных', legal('personal-data.txt'), '', '', true],
-  ['legal.privacy', 'Политика конфиденциальности', 'Текст страницы будет добавлен позже.', 'The page text will be added later.', 'Тэкст старонкі будзе дададзены пазней.', true],
+  ['legal.privacy', 'Политика конфиденциальности', legal('privacy.txt'), '', '', true],
 ].map(([key, label, ru, en, be, long = false]) => ({ key, label, ru, en, be, long }));
 const BY_KEY = new Map(DEFAULTS.map((item) => [item.key, item]));
 // Длинные тексты (страницы) — до 100000 символов, обычные надписи — до 300
