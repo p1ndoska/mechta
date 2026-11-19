@@ -39,7 +39,7 @@ const switchTitle = {
 // Поменяйте число после замены логотипа, чтобы браузер не показывал старый
 const LOGO_VERSION = 2;
 
-const navLinks = ['/#home', '/#rooms', '/contacts'];
+const navLinks = ['/#home', '/rooms', '/contacts'];
 
 const burgerLine = 'block h-0.5 rounded-[1px] bg-navy transition-[translate,rotate,opacity] duration-200';
 
