@@ -10,7 +10,8 @@ const discounts = require('./discounts');
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+// Запас для длинных текстов страниц из панели администратора
+app.use(express.json({ limit: '2mb' }));
 
 app.get('/api/health', async (req, res) => {
   try {

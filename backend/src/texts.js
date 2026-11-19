@@ -1,8 +1,13 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const prisma = require('./prisma');
 
 // Надписи на сайте, которые меняются в панели администратора.
 // Здесь значения по умолчанию; изменённые хранятся в таблице SiteText.
+// Длинные тексты страниц по умолчанию лежат в папке legal.
+const legal = (name) => fs.readFileSync(path.join(__dirname, 'legal', name), 'utf8').trim();
+
 const DEFAULTS = [
   ['advantages.title', 'Заголовок блока', 'Наши преимущества', 'Our advantages', 'Нашы перавагі'],
   ['advantages.airport.title', 'Аэропорт — заголовок', 'Близость аэропорта', 'Close to the airport', 'Блізкасць аэрапорта'],
@@ -24,12 +29,12 @@ const DEFAULTS = [
   ['cookies.text', 'Текст', 'Мы используем файлы cookie, чтобы сайт работал удобнее: например, запоминаем выбранный язык. Вы можете принять или отклонить необязательные cookie.', 'We use cookies to make the site more convenient, for example to remember your language. You can accept or decline optional cookies.', 'Мы выкарыстоўваем файлы cookie, каб сайтам было зручней карыстацца: напрыклад, запамінаем абраную мову. Вы можаце прыняць або адхіліць неабавязковыя cookie.'],
   ['cookies.accept', 'Кнопка «Принять»', 'Принять', 'Accept', 'Прыняць'],
   ['cookies.reject', 'Кнопка «Отклонить»', 'Отклонить', 'Decline', 'Адхіліць'],
-  ['legal.personal', 'Защита персональных данных', 'Текст страницы будет добавлен позже.', 'The page text will be added later.', 'Тэкст старонкі будзе дададзены пазней.', true],
+  ['legal.personal', 'Защита персональных данных', legal('personal-data.txt'), '', '', true],
   ['legal.privacy', 'Политика конфиденциальности', 'Текст страницы будет добавлен позже.', 'The page text will be added later.', 'Тэкст старонкі будзе дададзены пазней.', true],
 ].map(([key, label, ru, en, be, long = false]) => ({ key, label, ru, en, be, long }));
 const BY_KEY = new Map(DEFAULTS.map((item) => [item.key, item]));
-// Длинные тексты (страницы) — до 20000 символов, обычные надписи — до 300
-const maxLength = (key) => (BY_KEY.get(key).long ? 20000 : 300);
+// Длинные тексты (страницы) — до 100000 символов, обычные надписи — до 300
+const maxLength = (key) => (BY_KEY.get(key).long ? 100000 : 300);
 
 async function allTexts() {
   const saved = new Map((await prisma.siteText.findMany()).map((row) => [row.key, row]));

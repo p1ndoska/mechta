@@ -66,7 +66,7 @@ export default function TextsSection() {
                     rows={10}
                     value={item[lang]}
                     onChange={(e) => change(item.key, lang, e.target.value)}
-                    maxLength={20000}
+                    maxLength={100000}
                     required={lang === 'ru'}
                   />
                 ) : (
