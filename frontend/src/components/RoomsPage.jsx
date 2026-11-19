@@ -38,7 +38,7 @@ export default function RoomsPage({ lang }) {
         {rooms?.map((room) => (
           <article
             key={room.id}
-            className="grid grid-cols-[minmax(0,47fr)_minmax(0,53fr)] overflow-hidden rounded-lg border-6 border-cream bg-white max-xl:grid-cols-1 max-xl:border-4"
+            className="grid grid-cols-[minmax(0,47fr)_minmax(0,53fr)] overflow-hidden rounded-lg border-6 border-olive bg-white max-xl:grid-cols-1 max-xl:border-4"
           >
             <div className="flex items-center justify-center px-10 py-12 max-xl:order-last max-xl:px-5 max-xl:py-7">
               <div className="w-full max-w-[340px]">
@@ -51,10 +51,10 @@ export default function RoomsPage({ lang }) {
                   {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2.5">
-                  <button className={`${button} cursor-pointer bg-forest hover:bg-forest-hover`} type="button" onClick={() => setBooking(room.id)}>
+                  <button className={`${button} cursor-pointer bg-olive hover:bg-olive-hover`} type="button" onClick={() => setBooking(room.id)}>
                     {t.book}
                   </button>
-                  <a className={`${button} bg-room-accent hover:bg-room-accent-hover`} href={`/rooms/${room.id}`}>
+                  <a className={`${button} bg-olive hover:bg-olive-hover`} href={`/rooms/${room.id}`}>
                     {t.more} <span aria-hidden="true">→</span>
                   </a>
                 </div>

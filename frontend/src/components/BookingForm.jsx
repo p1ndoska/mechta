@@ -119,7 +119,7 @@ const input =
   'w-full rounded-md border border-form-line bg-white px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-form-placeholder focus:border-room-accent focus:outline-none';
 const label = 'flex min-w-0 flex-col gap-2 text-[14px] font-semibold text-ink';
 const button =
-  'cursor-pointer rounded-full bg-forest px-7 py-3 text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-forest-hover disabled:cursor-default disabled:opacity-60';
+  'cursor-pointer rounded-full bg-olive px-7 py-3 text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-olive-hover disabled:cursor-default disabled:opacity-60';
 
 // Локальная дата ГГГГ-ММ-ДД со сдвигом в днях
 function isoDate(days = 0) {
@@ -294,7 +294,7 @@ export default function BookingForm({ lang, roomId, tariff, onClose }) {
               <textarea className={`${input} min-h-[90px] resize-y`} value={form.wishes} onChange={set('wishes')} maxLength={1000} rows={3} />
             </label>
             <label className="flex items-start gap-2.5 text-[14px] leading-[1.5] text-ink-muted">
-              <input className="mt-1 size-4 shrink-0 accent-forest" type="checkbox" checked={form.consent} onChange={set('consent')} required />
+              <input className="mt-1 size-4 shrink-0 accent-olive" type="checkbox" checked={form.consent} onChange={set('consent')} required />
               <span>
                 {t.consent}{' '}
                 <a className="text-room-accent underline" href="/personal-data" target="_blank" rel="noreferrer">

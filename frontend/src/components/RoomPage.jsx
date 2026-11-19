@@ -166,7 +166,7 @@ export default function RoomPage({ id, lang }) {
                         )}
                       </div>
                       <button
-                        className="mt-5 inline-block cursor-pointer rounded-full bg-forest px-6 py-2.5 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-forest-hover"
+                        className="mt-5 inline-block cursor-pointer rounded-full bg-olive px-6 py-2.5 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-olive-hover"
                         type="button"
                         onClick={() => setBooking(item)}
                       >
