@@ -79,7 +79,7 @@ export default function ContactsPage({ lang, header }) {
   return (
     <div className="flex min-h-dvh flex-col">
       {header}
-      <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-8 text-center min-h-[160px] max-lg:min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
+      <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-8 text-center min-h-[160px] max-lg:min-h-[200px] before:absolute before:inset-0 before:bg-hero-tint before:backdrop-brightness-[0.58] before:backdrop-saturate-[0.55] max-lg:px-4 max-lg:py-9">
         <h1 className="relative mb-3 text-[length:clamp(30px,3.2vw,48px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
         <p className="relative text-[16px] text-cream-text max-lg:text-[15px]">{t('contacts.subtitle')}</p>
       </section>

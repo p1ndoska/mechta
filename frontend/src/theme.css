@@ -56,7 +56,6 @@
   /* Фон под фото, пока оно загружается, и фильтры поверх фото */
   --color-photo-fallback: #3a3a3a;
   --color-footer: #928e8b;
-  --color-contacts-tint: rgb(20 40 10 / 0.15);
   --color-map-card: #eef0f5;
   --color-dusk: #3b4155;
   --color-hero-tint: rgb(160 60 20 / 0.1);
