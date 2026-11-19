@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const prisma = require('./prisma');
 const { clientIp } = require('./admin/ipAllow');
 
@@ -6,6 +7,18 @@ const LIMIT = 5;
 const WINDOW_MS = 10 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const sent = new Map();
+
+// Почта для заявок задаётся в .env: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, BOOKING_EMAIL
+const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM, BOOKING_EMAIL } = process.env;
+const port = Number(SMTP_PORT) || 465;
+const transport = SMTP_HOST
+  ? nodemailer.createTransport({
+      host: SMTP_HOST,
+      port,
+      secure: port === 465,
+      auth: SMTP_USER ? { user: SMTP_USER, pass: SMTP_PASSWORD } : undefined,
+    })
+  : null;
 
 // Не больше 5 заявок с одного IP за 10 минут
 function tooMany(ip) {
@@ -28,6 +41,8 @@ function date(value) {
   return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== value ? null : d;
 }
 
+const ruDate = (d) => d.toISOString().slice(0, 10).split('-').reverse().join('.');
+
 async function parseBooking(body) {
   const b = body ?? {};
   const firstName = text(b.firstName, 60);
@@ -37,7 +52,7 @@ async function parseBooking(body) {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'email' };
   const phone = text(b.phone ?? '', 30);
   if (phone === null || (phone && !/^\+?[\d\s()-]{5,}$/.test(phone))) return { error: 'phone' };
-  const room = await prisma.room.findUnique({ where: { id: Number(b.roomId) || 0 }, select: { id: true, titleRu: true } });
+  const room = await prisma.room.findUnique({ where: { id: Number(b.roomId) || 0 }, select: { titleRu: true } });
   if (!room) return { error: 'room' };
   const tariff = text(b.tariff ?? '', 120);
   if (tariff === null) return { error: 'tariff' };
@@ -49,56 +64,50 @@ async function parseBooking(body) {
   const wishes = text(b.wishes ?? '', 1000);
   if (wishes === null) return { error: 'wishes' };
   if (b.consent !== true) return { error: 'consent' };
+  return { data: { firstName, lastName, email, phone, room: room.titleRu, tariff, checkIn, checkOut, wishes } };
+}
+
+function letter(d) {
+  const lines = [
+    ['Имя', d.firstName],
+    ['Фамилия', d.lastName],
+    ['Email', d.email],
+    ['Телефон', d.phone || '—'],
+    ['Категория', d.room],
+    ['Тариф', d.tariff || '—'],
+    ['Дата заезда', ruDate(d.checkIn)],
+    ['Дата выезда', ruDate(d.checkOut)],
+    ['Пожелания', d.wishes || '—'],
+  ];
   return {
-    data: { firstName, lastName, email, phone, roomId: room.id, roomTitle: room.titleRu, tariff, checkIn, checkOut, wishes },
+    subject: `Заявка на бронирование: ${d.room}, ${ruDate(d.checkIn)} — ${ruDate(d.checkOut)}`,
+    text: lines.map(([k, v]) => `${k}: ${v}`).join('\n'),
   };
-}
-
-function toJson(r) {
-  return { ...r, checkIn: r.checkIn.toISOString().slice(0, 10), checkOut: r.checkOut.toISOString().slice(0, 10) };
-}
-
-async function list() {
-  return (await prisma.bookingRequest.findMany({ orderBy: { id: 'desc' } })).map(toJson);
 }
 
 const publicRouter = express.Router();
 
-// Код ошибки (error) переводится на язык сайта во frontend
+// Заявка не сохраняется: письмо уходит на BOOKING_EMAIL, код ошибки (error) переводится во frontend
 publicRouter.post('/', async (req, res) => {
   const { data, error } = await parseBooking(req.body);
   if (error) return res.status(400).json({ error });
+  if (!transport || !BOOKING_EMAIL) {
+    console.error('Заявка не отправлена: не заданы SMTP_HOST или BOOKING_EMAIL в .env');
+    return res.status(503).json({ error: 'failed' });
+  }
   if (tooMany(clientIp(req))) return res.status(429).json({ error: 'tooMany' });
-  await prisma.bookingRequest.create({ data });
-  res.status(201).json({ ok: true });
+  try {
+    await transport.sendMail({
+      from: SMTP_FROM || SMTP_USER,
+      to: BOOKING_EMAIL,
+      replyTo: data.email,
+      ...letter(data),
+    });
+    res.status(201).json({ ok: true });
+  } catch (err) {
+    console.error('Заявка не отправлена:', err.message);
+    res.status(502).json({ error: 'failed' });
+  }
 });
 
-// Заявки видят все пользователи панели (администратор и редактор)
-function adminRouter(requireAdmin) {
-  const router = express.Router();
-  router.use(requireAdmin);
-
-  router.get('/', async (req, res) => {
-    res.json(await list());
-  });
-
-  router.put('/:id', async (req, res) => {
-    if (typeof req.body?.done !== 'boolean') return res.status(400).json({ error: 'done: true или false' });
-    const { count } = await prisma.bookingRequest.updateMany({
-      where: { id: Number(req.params.id) || 0 },
-      data: { done: req.body.done },
-    });
-    if (!count) return res.status(404).json({ error: 'Заявка не найдена' });
-    res.json(await list());
-  });
-
-  router.delete('/:id', async (req, res) => {
-    const { count } = await prisma.bookingRequest.deleteMany({ where: { id: Number(req.params.id) || 0 } });
-    if (!count) return res.status(404).json({ error: 'Заявка не найдена' });
-    res.json(await list());
-  });
-
-  return router;
-}
-
-module.exports = { publicRouter, adminRouter };
+module.exports = { publicRouter };

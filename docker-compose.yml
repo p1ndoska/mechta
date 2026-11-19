@@ -31,6 +31,12 @@ services:
       ADMIN_NAME: ${ADMIN_NAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
       JWT_SECRET: ${JWT_SECRET:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      BOOKING_EMAIL: ${BOOKING_EMAIL:-}
     # API доступен напрямую только с этого компьютера, снаружи — через сайт (nginx)
     ports:
       - "127.0.0.1:3002:3002"

@@ -143,7 +143,7 @@ function Label({ text, required }) {
   );
 }
 
-// Окно «Забронировать»: заявка сохраняется в панели администратора, вкладка «Заявки»
+// Окно «Забронировать»: заявка уходит письмом на почту гостиницы и нигде не сохраняется
 export default function BookingForm({ lang, roomId, tariff, onClose }) {
   const t = texts[lang];
   const [rooms, setRooms] = useState([]);

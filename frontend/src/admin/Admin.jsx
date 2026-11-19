@@ -4,7 +4,6 @@ import { messageClass, ui } from './ui.js';
 import RoomsSection from './RoomsSection.jsx';
 import TextsSection from './TextsSection.jsx';
 import DiscountsSection from './DiscountsSection.jsx';
-import BookingsSection from './BookingsSection.jsx';
 
 
 function LoginForm({ onLogin }) {
@@ -203,7 +202,6 @@ function UsersSection({ currentName }) {
 }
 
 const tabs = [
-  { id: 'bookings', label: 'Заявки' },
   { id: 'rooms', label: 'Номера' },
   { id: 'discounts', label: 'Скидки' },
   { id: 'texts', label: 'Тексты сайта' },
@@ -249,7 +247,6 @@ function Tabs({ state }) {
         ))}
       </div>
       <div id={`panel-${active}`} role="tabpanel" aria-labelledby={`tab-${active}`}>
-        {active === 'bookings' && <BookingsSection />}
         {active === 'rooms' && <RoomsSection />}
         {active === 'discounts' && <DiscountsSection />}
         {active === 'texts' && <TextsSection />}

@@ -88,21 +88,3 @@ model Discount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// Заявки на бронирование из формы «Забронировать» на сайте
-model BookingRequest {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String
-  phone     String   @default("")
-  roomId    Int?
-  // Название номера на момент заявки, чтобы оно осталось и после удаления номера
-  roomTitle String
-  tariff    String   @default("")
-  checkIn   DateTime @db.Date
-  checkOut  DateTime @db.Date
-  wishes    String   @default("")
-  done      Boolean  @default(false)
-  createdAt DateTime @default(now())
-}
