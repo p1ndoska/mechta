@@ -33,8 +33,8 @@ export default function Hero({ lang }) {
           {t.text}
         </p>
         <a
-          href="#rooms"
-          className="inline-block rounded-full bg-olive px-[26px] py-2.5 text-[length:clamp(12px,0.9vw,14px)] font-semibold text-white transition-colors duration-200 hover:bg-olive-hover max-lg:px-5 max-lg:py-[9px] max-lg:text-[13px]"
+          href="/rooms"
+          className="inline-block rounded-full bg-olive px-10 py-4 text-[length:clamp(16px,1.3vw,20px)] font-semibold text-white transition-colors duration-200 hover:bg-olive-hover max-lg:px-7 max-lg:py-3 max-lg:text-[16px]"
         >
           {t.button}
         </a>
