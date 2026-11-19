@@ -8,7 +8,7 @@ const LANGS = [
   ['be', 'Беларуская'],
 ];
 const noText = { ru: '', en: '', be: '' };
-const empty = { title: noText, description: noText, price: '', priceFrom: false };
+const empty = { title: noText, description: noText, price: '', priceFrom: false, amenities: [] };
 const MAX_SIDE = 1600;
 
 // Уменьшаем фото в браузере до 1600 px по большей стороне, чтобы не грузить в базу снимки по 5–10 МБ
@@ -74,7 +74,13 @@ export default function RoomsSection() {
   }
 
   function edit(room) {
-    setForm({ title: { ...room.title }, description: { ...room.description }, price: String(room.price), priceFrom: room.priceFrom });
+    setForm({
+      title: { ...room.title },
+      description: { ...room.description },
+      price: String(room.price),
+      priceFrom: room.priceFrom,
+      amenities: room.amenities.map((item) => ({ ...item })),
+    });
     setEditId(room.id);
     clearExtras();
     setPhotos(room.photos || []);
@@ -113,6 +119,21 @@ export default function RoomsSection() {
   function dropExtra(extra) {
     URL.revokeObjectURL(extra.url);
     setExtras((list) => list.filter((item) => item !== extra));
+  }
+
+  function setAmenities(amenities) {
+    setForm((f) => ({ ...f, amenities }));
+  }
+
+  function changeAmenity(index, lang, value) {
+    setAmenities(form.amenities.map((item, i) => (i === index ? { ...item, [lang]: value } : item)));
+  }
+
+  function moveAmenity(index, direction) {
+    const target = index + direction;
+    const list = [...form.amenities];
+    [list[index], list[target]] = [list[target], list[index]];
+    setAmenities(list);
   }
 
   async function movePhoto(item, direction) {
@@ -292,6 +313,55 @@ export default function RoomsSection() {
             </label>
           </fieldset>
         ))}
+        <div className={ui.field}>
+          Удобства (для страницы номера, блок «Удобства для комфортного пребывания»)
+          {form.amenities.length > 0 && (
+            <div className={ui.amenities}>
+              {form.amenities.map((item, i) => (
+                <div key={i} className={ui.amenityRow}>
+                  {LANGS.map(([lang, name]) => (
+                    <input
+                      key={lang}
+                      className={ui.input}
+                      value={item[lang]}
+                      onChange={(e) => changeAmenity(i, lang, e.target.value)}
+                      placeholder={name}
+                      aria-label={`Удобство ${i + 1}: ${name}`}
+                      maxLength={100}
+                      required={lang === 'ru'}
+                    />
+                  ))}
+                  <span className={ui.amenityActions}>
+                    <button className={ui.icon} type="button" onClick={() => moveAmenity(i, -1)} disabled={i === 0} aria-label="Выше">
+                      ↑
+                    </button>
+                    <button
+                      className={ui.icon}
+                      type="button"
+                      onClick={() => moveAmenity(i, 1)}
+                      disabled={i === form.amenities.length - 1}
+                      aria-label="Ниже"
+                    >
+                      ↓
+                    </button>
+                    <button
+                      className={ui.icon}
+                      type="button"
+                      onClick={() => setAmenities(form.amenities.filter((_, j) => j !== i))}
+                      aria-label="Удалить удобство"
+                    >
+                      ×
+                    </button>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          <button className={`${ui.link} self-start`} type="button" onClick={() => setAmenities([...form.amenities, { ...noText }])}>
+            + Добавить удобство
+          </button>
+          <span className={ui.muted}>Если английское или белорусское название не заполнено, показывается русское.</span>
+        </div>
         <div className={ui.priceRow}>
           <label className={`${ui.field} w-40`}>
             Цена, BYN

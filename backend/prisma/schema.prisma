@@ -43,6 +43,8 @@ model Room {
   descriptionBe String   @default("")
   price       Decimal  @db.Decimal(10, 2)
   priceFrom   Boolean  @default(false)
+  // Удобства номера: [{ ru, en, be }]
+  amenities   Json     @default("[]")
   sortOrder   Int      @default(0)
   photo       Bytes?
   photoType   String?

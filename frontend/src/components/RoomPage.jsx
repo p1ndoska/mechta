@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { pick } from './Rooms.jsx';
 
 const texts = {
-  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
-  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', hotel: 'Mechta Hotel', notFound: 'Room not found', loading: 'Loading…' },
-  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
+  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', amenities: 'Удобства для комфортного пребывания:', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
+  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', amenities: 'Amenities for a comfortable stay:', hotel: 'Mechta Hotel', notFound: 'Room not found', loading: 'Loading…' },
+  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', amenities: 'Выгоды для камфортнага пражывання:', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
 };
 
+const subtitle = 'mt-14 mb-6 text-[28px] font-medium text-sand max-xl:mt-10';
 const title = 'text-title font-medium text-sand max-xl:text-[32px]';
 const text = 'mt-6 text-[17px] leading-[1.7] whitespace-pre-line text-sand-text';
 const photoButton = 'group block w-full cursor-zoom-in border-0 bg-transparent p-0';
@@ -114,9 +115,21 @@ export default function RoomPage({ id, lang }) {
                 {pick(room.description, lang) && <p className={text}>{pick(room.description, lang)}</p>}
               </div>
             </div>
+            {room.amenities.length > 0 && (
+              <>
+                <h2 className={subtitle}>{t.amenities}</h2>
+                <ul className="list-disc columns-4 gap-x-10 pl-5 text-[17px] text-sand-text marker:text-sand max-xl:columns-2 max-sm:columns-1">
+                  {room.amenities.map((item, i) => (
+                    <li key={i} className="mb-2.5 break-inside-avoid">
+                      {pick(item, lang)}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
             {room.photos.length > 0 && (
               <>
-                <h2 className="mt-14 mb-6 text-[28px] font-medium text-sand max-xl:mt-10">{t.photos}</h2>
+                <h2 className={subtitle}>{t.photos}</h2>
                 <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-xl:gap-2.5">
                   {room.photos.map((photo, i) => (
                     <button

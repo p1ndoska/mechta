@@ -11,6 +11,7 @@ const FIELDS = {
   descriptionBe: true,
   price: true,
   priceFrom: true,
+  amenities: true,
   sortOrder: true,
   photoType: true,
   updatedAt: true,
@@ -31,6 +32,7 @@ function toJson(room) {
     description: { ru: room.descriptionRu, en: room.descriptionEn, be: room.descriptionBe },
     price: Number(room.price),
     priceFrom: room.priceFrom,
+    amenities: Array.isArray(room.amenities) ? room.amenities : [],
     // Версия в адресе меняется при каждом изменении карточки, поэтому фото можно кэшировать надолго
     photoUrl: room.photoType ? `/api/rooms/${room.id}/photo?v=${room.updatedAt.getTime()}` : null,
     ...(room.photos && {
@@ -69,8 +71,31 @@ const LANGS = [
   ['be', 'Be', 'белорусский'],
 ];
 
+const MAX_AMENITIES = 60;
+
+function parseAmenities(list) {
+  if (!Array.isArray(list) || list.length > MAX_AMENITIES) return { error: `Удобства: не больше ${MAX_AMENITIES}` };
+  const amenities = [];
+  for (const item of list) {
+    const names = {};
+    for (const [lang, , name] of LANGS) {
+      const value = item?.[lang] ?? '';
+      if (typeof value !== 'string' || value.trim().length > 100) {
+        return { error: `Удобство (${name}): не длиннее 100 символов` };
+      }
+      names[lang] = value.trim();
+    }
+    if (!names.ru) {
+      if (names.en || names.be) return { error: 'Удобство: заполните название на русском' };
+      continue;
+    }
+    amenities.push(names);
+  }
+  return { amenities };
+}
+
 function parseRoom(body) {
-  const { title, description, price, priceFrom = false } = body ?? {};
+  const { title, description, price, priceFrom = false, amenities: list = [] } = body ?? {};
   const texts = {};
   for (const [lang, suffix, name] of LANGS) {
     const t = title?.[lang];
@@ -89,8 +114,10 @@ function parseRoom(body) {
     return { error: 'Цена: число больше 0' };
   }
   if (typeof priceFrom !== 'boolean') return { error: 'Неверное значение «от»' };
+  const { amenities, error } = parseAmenities(list);
+  if (error) return { error };
   return {
-    data: { ...texts, price: Math.round(value * 100) / 100, priceFrom },
+    data: { ...texts, price: Math.round(value * 100) / 100, priceFrom, amenities },
   };
 }
 
