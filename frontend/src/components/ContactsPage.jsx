@@ -9,7 +9,7 @@ const icons = {
 
 function Icon({ name }) {
   return (
-    <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 fill-burgundy" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="size-[18px] shrink-0 fill-burgundy max-lg:size-4" aria-hidden="true">
       <path d={icons[name]} />
     </svg>
   );
@@ -29,17 +29,17 @@ function Map({ coords, text, button }) {
   const point = `${lon},${lat}`;
 
   return (
-    <div className="rounded-xl bg-map-card p-4 max-sm:p-3">
+    <div className="rounded-2xl bg-map-card p-5 max-sm:p-3">
       {show ? (
         <iframe
-          className="block aspect-4/3 w-full border-0"
+          className="block aspect-16/10 w-full rounded-lg border-0 max-lg:aspect-4/3"
           src={`https://yandex.ru/map-widget/v1/?ll=${point}&z=15&pt=${point},pm2rdm`}
           title="Яндекс Карты"
           loading="lazy"
           allowFullScreen
         />
       ) : (
-        <div className="flex aspect-4/3 flex-col items-center justify-center gap-4 px-4 text-center text-[14px] text-ink">
+        <div className="flex aspect-16/10 flex-col items-center max-lg:aspect-4/3 justify-center gap-4 px-4 text-center text-[16px] text-ink">
           <p>{text}</p>
           <button
             type="button"
@@ -80,18 +80,18 @@ export default function ContactsPage({ lang, header }) {
     <div className="flex min-h-dvh flex-col">
       {header}
       <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
-        <h1 className="relative mb-3 text-[length:clamp(28px,2.6vw,40px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
-        <p className="relative text-[13px] text-cream-text">{t('contacts.subtitle')}</p>
+        <h1 className="relative mb-3 text-[length:clamp(30px,3.2vw,48px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
+        <p className="relative text-[16px] text-cream-text max-lg:text-[15px]">{t('contacts.subtitle')}</p>
       </section>
 
-      <section className="flex flex-[3] items-center bg-olive px-6 py-14 max-lg:px-4 max-lg:py-10">
-        <div className="mx-auto grid w-full max-w-[880px] grid-cols-[1fr_minmax(0,420px)] items-start gap-16 max-lg:grid-cols-1 max-lg:gap-8">
+      <section className="flex flex-[3] items-center bg-olive px-6 py-10 max-lg:px-4 max-lg:py-10">
+        <div className="mx-auto grid w-full max-w-content grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-center gap-16 max-xl:gap-10 max-lg:grid-cols-1 max-lg:gap-8">
           <div>
-            <h2 className="mb-6 text-[30px] leading-[1.2] font-medium text-cream max-lg:text-[26px]">{t('contacts.heading')}</h2>
-            <dl className="flex flex-col gap-5 text-[14px] text-cream-text">
+            <h2 className="mb-8 text-title leading-[1.2] font-medium text-cream max-lg:mb-6 max-lg:text-title-sm">{t('contacts.heading')}</h2>
+            <dl className="flex flex-col gap-6 text-[18px] text-cream-text max-lg:gap-5 max-lg:text-[16px]">
               {items.map(([key, icon, href]) => (
                 <div key={key}>
-                  <dt className="mb-1.5 flex items-center gap-1.5 font-semibold text-white">
+                  <dt className="mb-1.5 flex items-center gap-2 font-semibold text-white">
                     <Icon name={icon} />
                     {t(`contacts.${key}.label`)}
                   </dt>
