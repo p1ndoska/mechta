@@ -55,7 +55,7 @@ function Map({ coords, text, button }) {
 }
 
 // Надписи меняются в панели администратора, вкладка «Тексты сайта»
-// Шапка, фото и блок «Связаться» вместе занимают высоту экрана, фото растягивается на оставшееся место
+// Шапка, фото и блок «Связаться» вместе занимают высоту экрана; под шапкой фото — 2 части, зелёный блок — 3
 export default function ContactsPage({ lang, header }) {
   const [texts, setTexts] = useState(null);
 
@@ -79,13 +79,13 @@ export default function ContactsPage({ lang, header }) {
   return (
     <div className="flex min-h-dvh flex-col">
       {header}
-      <section className="relative flex flex-1 flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
+      <section className="relative flex flex-[2] flex-col items-center justify-center bg-forest bg-(image:--image-contacts) bg-cover bg-center bg-no-repeat px-6 py-12 text-center min-h-[200px] before:absolute before:inset-0 before:bg-contacts-tint before:backdrop-brightness-[0.75] max-lg:px-4 max-lg:py-9">
         <h1 className="relative mb-3 text-[length:clamp(28px,2.6vw,40px)] leading-[1.2] font-medium text-cream">{t('contacts.title')}</h1>
         <p className="relative text-[13px] text-cream-text">{t('contacts.subtitle')}</p>
       </section>
 
-      <section className="bg-olive px-6 py-14 max-lg:px-4 max-lg:py-10">
-        <div className="mx-auto grid max-w-[880px] grid-cols-[1fr_minmax(0,420px)] items-start gap-16 max-lg:grid-cols-1 max-lg:gap-8">
+      <section className="flex flex-[3] items-center bg-olive px-6 py-14 max-lg:px-4 max-lg:py-10">
+        <div className="mx-auto grid w-full max-w-[880px] grid-cols-[1fr_minmax(0,420px)] items-start gap-16 max-lg:grid-cols-1 max-lg:gap-8">
           <div>
             <h2 className="mb-6 text-[30px] leading-[1.2] font-medium text-cream max-lg:text-[26px]">{t('contacts.heading')}</h2>
             <dl className="flex flex-col gap-5 text-[14px] text-cream-text">
