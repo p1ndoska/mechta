@@ -7,9 +7,9 @@ const texts = {
   be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', amenities: 'Выгоды для камфортнага пражывання:', tariffs: 'Тарыфы', book: 'Забраніраваць', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
 };
 
-const subtitle = 'mt-14 mb-6 text-[28px] font-medium text-sand max-xl:mt-10';
-const title = 'text-title font-medium text-sand max-xl:text-[32px]';
-const text = 'mt-6 text-[17px] leading-[1.7] whitespace-pre-line text-sand-text';
+const subtitle = 'mt-14 mb-6 text-[28px] font-medium text-burgundy max-xl:mt-10';
+const title = 'text-title font-medium text-burgundy max-xl:text-[32px]';
+const text = 'mt-6 text-[17px] leading-[1.7] whitespace-pre-line text-ink-muted';
 const photoButton = 'group block w-full cursor-zoom-in border-0 bg-transparent p-0';
 const lightboxNav =
   'absolute top-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-4 text-[56px] leading-none text-white max-xl:top-auto max-xl:bottom-0 max-xl:translate-y-0';
@@ -91,9 +91,9 @@ export default function RoomPage({ id, lang }) {
   const gallery = room ? [room.photoUrl, ...room.photos.map((photo) => photo.url)].filter(Boolean) : [];
 
   return (
-    <section className="box-content min-h-[70vh] bg-burgundy px-8 pt-10 pb-20 text-sand-light max-xl:px-5 max-xl:pt-7 max-xl:pb-14">
+    <section className="box-content min-h-[70vh] border-t border-card-line bg-white px-8 pt-10 pb-20 text-ink max-xl:px-5 max-xl:pt-7 max-xl:pb-14">
       <div className="mx-auto max-w-content">
-        <a className="mb-7 inline-block text-[16px] text-sand hover:underline" href="/rooms">
+        <a className="mb-7 inline-block text-[16px] text-burgundy hover:underline" href="/rooms">
           ← {t.back}
         </a>
         {room === undefined && <p className={text}>{t.loading}</p>}
@@ -108,7 +108,7 @@ export default function RoomPage({ id, lang }) {
               )}
               <div>
                 <h1 className={title}>{pick(room.title, lang)}</h1>
-                <p className="mt-[18px] text-price font-semibold text-ivory max-xl:text-[28px]">
+                <p className="mt-[18px] text-price font-semibold text-ink max-xl:text-[28px]">
                   {room.priceFrom && `${t.from} `}
                   {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
                 </p>
@@ -118,7 +118,7 @@ export default function RoomPage({ id, lang }) {
             {room.amenities.length > 0 && (
               <>
                 <h2 className={subtitle}>{t.amenities}</h2>
-                <ul className="list-disc columns-4 gap-x-10 pl-5 text-[17px] text-sand-text marker:text-sand max-xl:columns-2 max-sm:columns-1">
+                <ul className="list-disc columns-4 gap-x-10 pl-5 text-[17px] text-ink marker:text-burgundy max-xl:columns-2 max-sm:columns-1">
                   {room.amenities.map((item, i) => (
                     <li key={i} className="mb-2.5 break-inside-avoid">
                       {pick(item, lang)}
