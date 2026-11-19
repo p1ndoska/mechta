@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { pick } from './Rooms.jsx';
+import BookingForm from './BookingForm.jsx';
 
 const texts = {
   ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', amenities: 'Удобства для комфортного пребывания:', tariffs: 'Тарифы', book: 'Забронировать', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
@@ -75,6 +76,8 @@ function Lightbox({ photos, index, setIndex }) {
 export default function RoomPage({ id, lang }) {
   const [room, setRoom] = useState(undefined);
   const [open, setOpen] = useState(null);
+  const [booking, setBooking] = useState(null);
+  const closeBooking = useCallback(() => setBooking(null), []);
   const t = texts[lang];
 
   useEffect(() => {
@@ -162,12 +165,13 @@ export default function RoomPage({ id, lang }) {
                           <p className="mt-2 text-[14px] leading-[1.5] text-ink-muted">{pick(item.description, lang)}</p>
                         )}
                       </div>
-                      <a
-                        className="mt-5 inline-block rounded-full bg-forest px-6 py-2.5 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-forest-hover"
-                        href="/contacts"
+                      <button
+                        className="mt-5 inline-block cursor-pointer rounded-full bg-forest px-6 py-2.5 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-forest-hover"
+                        type="button"
+                        onClick={() => setBooking(item)}
                       >
                         {t.book}
-                      </a>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -177,6 +181,7 @@ export default function RoomPage({ id, lang }) {
         )}
       </div>
       {open !== null && <Lightbox photos={gallery} index={open} setIndex={setOpen} />}
+      {booking && <BookingForm lang={lang} roomId={room.id} tariff={booking} onClose={closeBooking} />}
     </section>
   );
 }

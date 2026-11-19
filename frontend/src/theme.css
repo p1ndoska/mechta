@@ -44,6 +44,10 @@
   --color-card-line: #e3e4e8;
   --color-tariff-line: #c9cbd0;
   --color-tariff-price: #1f4a35;
+  --color-form-line: #d9dce1;
+  --color-form-placeholder: #8a8f99;
+  --color-required: #e5484d;
+  --color-modal-backdrop: rgb(20 24 32 / 0.55);
 
   /* Светлая кнопка блока «Готовы к путешествию?» */
   --color-button-light: #f4f0d4;

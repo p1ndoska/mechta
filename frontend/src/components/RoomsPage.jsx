@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { pick } from './Rooms.jsx';
+import BookingForm from './BookingForm.jsx';
 
 const texts = {
   ru: { locale: 'ru-RU', title: 'Номера для проживания', hotel: 'гостиница «Мечта»', from: 'от', book: 'Забронировать', more: 'Подробнее', loading: 'Загрузка…', empty: 'Номера пока не добавлены' },
@@ -13,6 +14,8 @@ const note = 'text-center text-[16px] text-ink-muted';
 // Все номера из панели администратора, вкладка «Номера»
 export default function RoomsPage({ lang }) {
   const [rooms, setRooms] = useState(null);
+  const [booking, setBooking] = useState(null);
+  const closeBooking = useCallback(() => setBooking(null), []);
   const t = texts[lang];
 
   useEffect(() => {
@@ -48,9 +51,9 @@ export default function RoomsPage({ lang }) {
                   {room.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2.5">
-                  <a className={`${button} bg-forest hover:bg-forest-hover`} href={`/rooms/${room.id}`}>
+                  <button className={`${button} cursor-pointer bg-forest hover:bg-forest-hover`} type="button" onClick={() => setBooking(room.id)}>
                     {t.book}
-                  </a>
+                  </button>
                   <a className={`${button} bg-room-accent hover:bg-room-accent-hover`} href={`/rooms/${room.id}`}>
                     {t.more} <span aria-hidden="true">→</span>
                   </a>
@@ -65,6 +68,7 @@ export default function RoomsPage({ lang }) {
           </article>
         ))}
       </div>
+      {booking && <BookingForm lang={lang} roomId={booking} onClose={closeBooking} />}
     </section>
   );
 }
