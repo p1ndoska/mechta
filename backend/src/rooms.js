@@ -12,6 +12,7 @@ const FIELDS = {
   price: true,
   priceFrom: true,
   amenities: true,
+  tariffs: true,
   sortOrder: true,
   photoType: true,
   updatedAt: true,
@@ -33,6 +34,7 @@ function toJson(room) {
     price: Number(room.price),
     priceFrom: room.priceFrom,
     amenities: Array.isArray(room.amenities) ? room.amenities : [],
+    tariffs: Array.isArray(room.tariffs) ? room.tariffs : [],
     // Версия в адресе меняется при каждом изменении карточки, поэтому фото можно кэшировать надолго
     photoUrl: room.photoType ? `/api/rooms/${room.id}/photo?v=${room.updatedAt.getTime()}` : null,
     ...(room.photos && {
@@ -94,8 +96,42 @@ function parseAmenities(list) {
   return { amenities };
 }
 
+const MAX_TARIFFS = 12;
+
+// Цена в BYN, округлённая до копеек, или null, если это не число от 0,01 до 100 000
+function parsePrice(price) {
+  const value = Number(price);
+  if (price === '' || price === null || typeof price === 'boolean' || !Number.isFinite(value) || value <= 0 || value > 100000) {
+    return null;
+  }
+  return Math.round(value * 100) / 100;
+}
+
+function parseTariffs(list) {
+  if (!Array.isArray(list) || list.length > MAX_TARIFFS) return { error: `Тарифы: не больше ${MAX_TARIFFS}` };
+  const tariffs = [];
+  for (const [index, item] of list.entries()) {
+    const number = index + 1;
+    const price = parsePrice(item?.price);
+    if (price === null) return { error: `Тариф ${number}: цена — число больше 0` };
+    const name = {};
+    const description = {};
+    for (const [lang, , langName] of LANGS) {
+      const n = item?.name?.[lang] ?? '';
+      const d = item?.description?.[lang] ?? '';
+      if (typeof n !== 'string' || n.trim().length > 60) return { error: `Тариф ${number}, название (${langName}): не длиннее 60 символов` };
+      if (typeof d !== 'string' || d.trim().length > 200) return { error: `Тариф ${number}, описание (${langName}): не длиннее 200 символов` };
+      name[lang] = n.trim();
+      description[lang] = d.trim();
+    }
+    if (!name.ru) return { error: `Тариф ${number}: заполните название на русском` };
+    tariffs.push({ price, name, description });
+  }
+  return { tariffs };
+}
+
 function parseRoom(body) {
-  const { title, description, price, priceFrom = false, amenities: list = [] } = body ?? {};
+  const { title, description, price, priceFrom = false, amenities: list = [], tariffs: tariffList = [] } = body ?? {};
   const texts = {};
   for (const [lang, suffix, name] of LANGS) {
     const t = title?.[lang];
@@ -109,15 +145,15 @@ function parseRoom(body) {
     texts[`title${suffix}`] = t.trim();
     texts[`description${suffix}`] = d.trim();
   }
-  const value = Number(price);
-  if (price === '' || price === null || !Number.isFinite(value) || value <= 0 || value > 100000) {
-    return { error: 'Цена: число больше 0' };
-  }
+  const value = parsePrice(price);
+  if (value === null) return { error: 'Цена: число больше 0' };
   if (typeof priceFrom !== 'boolean') return { error: 'Неверное значение «от»' };
   const { amenities, error } = parseAmenities(list);
   if (error) return { error };
+  const { tariffs, error: tariffError } = parseTariffs(tariffList);
+  if (tariffError) return { error: tariffError };
   return {
-    data: { ...texts, price: Math.round(value * 100) / 100, priceFrom, amenities },
+    data: { ...texts, price: value, priceFrom, amenities, tariffs },
   };
 }
 

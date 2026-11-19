@@ -45,6 +45,8 @@ model Room {
   priceFrom   Boolean  @default(false)
   // Удобства номера: [{ ru, en, be }]
   amenities   Json     @default("[]")
+  // Тарифы номера: [{ price, name: { ru, en, be }, description: { ru, en, be } }]
+  tariffs     Json     @default("[]")
   sortOrder   Int      @default(0)
   photo       Bytes?
   photoType   String?

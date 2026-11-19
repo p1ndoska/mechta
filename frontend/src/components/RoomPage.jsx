@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { pick } from './Rooms.jsx';
 
 const texts = {
-  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', amenities: 'Удобства для комфортного пребывания:', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
-  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', amenities: 'Amenities for a comfortable stay:', hotel: 'Mechta Hotel', notFound: 'Room not found', loading: 'Loading…' },
-  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', amenities: 'Выгоды для камфортнага пражывання:', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
+  ru: { locale: 'ru-RU', back: 'Все номера', from: 'от', photos: 'Фотографии', amenities: 'Удобства для комфортного пребывания:', tariffs: 'Тарифы', book: 'Забронировать', hotel: 'гостиница «Мечта»', notFound: 'Номер не найден', loading: 'Загрузка…' },
+  en: { locale: 'en-US', back: 'All rooms', from: 'from', photos: 'Photos', amenities: 'Amenities for a comfortable stay:', tariffs: 'Rates', book: 'Book', hotel: 'Mechta Hotel', notFound: 'Room not found', loading: 'Loading…' },
+  be: { locale: 'be-BY', back: 'Усе нумары', from: 'ад', photos: 'Фотаздымкі', amenities: 'Выгоды для камфортнага пражывання:', tariffs: 'Тарыфы', book: 'Забраніраваць', hotel: 'гасцініца «Мечта»', notFound: 'Нумар не знойдзены', loading: 'Загрузка…' },
 };
 
 const subtitle = 'mt-14 mb-6 text-[28px] font-medium text-sand max-xl:mt-10';
@@ -122,6 +122,35 @@ export default function RoomPage({ id, lang }) {
                   {room.amenities.map((item, i) => (
                     <li key={i} className="mb-2.5 break-inside-avoid">
                       {pick(item, lang)}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {room.tariffs.length > 0 && (
+              <>
+                <h2 className={subtitle}>{t.tariffs}</h2>
+                <ul className="flex flex-wrap justify-center gap-5 max-sm:gap-3">
+                  {room.tariffs.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex w-[220px] flex-col items-center rounded-md border border-tariff-line bg-white px-5 pt-8 pb-6 text-center shadow-card max-sm:w-full"
+                    >
+                      <p className="text-[34px] leading-none font-semibold text-tariff-price">
+                        {item.price.toLocaleString(t.locale, { maximumFractionDigits: 2 })} BYN
+                      </p>
+                      <div className="flex-1">
+                        <h3 className="mt-4 text-[16px] font-semibold text-ink">{pick(item.name, lang)}</h3>
+                        {pick(item.description, lang) && (
+                          <p className="mt-2 text-[14px] leading-[1.5] text-ink-muted">{pick(item.description, lang)}</p>
+                        )}
+                      </div>
+                      <a
+                        className="mt-5 inline-block rounded-full bg-forest px-6 py-2.5 text-[14px] font-semibold text-white transition-colors duration-200 hover:bg-forest-hover"
+                        href="/contacts"
+                      >
+                        {t.book}
+                      </a>
                     </li>
                   ))}
                 </ul>

@@ -8,7 +8,8 @@ const LANGS = [
   ['be', 'Беларуская'],
 ];
 const noText = { ru: '', en: '', be: '' };
-const empty = { title: noText, description: noText, price: '', priceFrom: false, amenities: [] };
+const empty = { title: noText, description: noText, price: '', priceFrom: false, amenities: [], tariffs: [] };
+const emptyTariff = { price: '', name: noText, description: noText };
 const MAX_SIDE = 1600;
 
 // Уменьшаем фото в браузере до 1600 px по большей стороне, чтобы не грузить в базу снимки по 5–10 МБ
@@ -80,6 +81,7 @@ export default function RoomsSection() {
       price: String(room.price),
       priceFrom: room.priceFrom,
       amenities: room.amenities.map((item) => ({ ...item })),
+      tariffs: room.tariffs.map((item) => ({ price: String(item.price), name: { ...item.name }, description: { ...item.description } })),
     });
     setEditId(room.id);
     clearExtras();
@@ -125,15 +127,27 @@ export default function RoomsSection() {
     setForm((f) => ({ ...f, amenities }));
   }
 
+  function setTariffs(tariffs) {
+    setForm((f) => ({ ...f, tariffs }));
+  }
+
+  function changeTariff(index, change) {
+    setTariffs(form.tariffs.map((item, i) => (i === index ? change(item) : item)));
+  }
+
   function changeAmenity(index, lang, value) {
     setAmenities(form.amenities.map((item, i) => (i === index ? { ...item, [lang]: value } : item)));
   }
 
-  function moveAmenity(index, direction) {
+  function moved(items, index, direction) {
     const target = index + direction;
-    const list = [...form.amenities];
+    const list = [...items];
     [list[index], list[target]] = [list[target], list[index]];
-    setAmenities(list);
+    return list;
+  }
+
+  function moveAmenity(index, direction) {
+    setAmenities(moved(form.amenities, index, direction));
   }
 
   async function movePhoto(item, direction) {
@@ -154,7 +168,7 @@ export default function RoomsSection() {
       return;
     }
     setBusy(true);
-    const body = { ...form, price: Number(form.price) };
+    const body = { ...form, price: Number(form.price), tariffs: form.tariffs.map((item) => ({ ...item, price: Number(item.price) })) };
     const res = editId ? await api(`/rooms/${editId}`, body, 'PUT') : await api('/rooms', body);
     let error = res.ok ? null : res.data?.error || 'Не удалось сохранить номер';
     if (res.ok && photo) {
@@ -361,6 +375,77 @@ export default function RoomsSection() {
             + Добавить удобство
           </button>
           <span className={ui.muted}>Если английское или белорусское название не заполнено, показывается русское.</span>
+        </div>
+        <div className={ui.field}>
+          Тарифы (для страницы номера, блок «Тарифы»)
+          {form.tariffs.map((item, i) => (
+            <div key={i} className={ui.tariff}>
+              <div className={ui.tariffTop}>
+                Тариф {i + 1}
+                <span className={ui.amenityActions}>
+                  <button className={ui.icon} type="button" onClick={() => setTariffs(moved(form.tariffs, i, -1))} disabled={i === 0} aria-label="Раньше">
+                    ←
+                  </button>
+                  <button
+                    className={ui.icon}
+                    type="button"
+                    onClick={() => setTariffs(moved(form.tariffs, i, 1))}
+                    disabled={i === form.tariffs.length - 1}
+                    aria-label="Позже"
+                  >
+                    →
+                  </button>
+                  <button
+                    className={ui.icon}
+                    type="button"
+                    onClick={() => setTariffs(form.tariffs.filter((_, j) => j !== i))}
+                    aria-label="Удалить тариф"
+                  >
+                    ×
+                  </button>
+                </span>
+              </div>
+              <label className={`${ui.field} w-40`}>
+                Цена, BYN
+                <input
+                  className={ui.input}
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={item.price}
+                  onChange={(e) => changeTariff(i, (tariff) => ({ ...tariff, price: e.target.value }))}
+                  required
+                />
+              </label>
+              {[
+                ['name', 'Название', 60],
+                ['description', 'Описание', 200],
+              ].map(([key, label, max]) => (
+                <div key={key} className={ui.field}>
+                  {label}
+                  <div className={ui.tariffTexts}>
+                    {LANGS.map(([lang, name]) => (
+                      <input
+                        key={lang}
+                        className={ui.input}
+                        value={item[key][lang]}
+                        onChange={(e) =>
+                          changeTariff(i, (tariff) => ({ ...tariff, [key]: { ...tariff[key], [lang]: e.target.value } }))
+                        }
+                        placeholder={name}
+                        aria-label={`Тариф ${i + 1}, ${label.toLowerCase()}: ${name}`}
+                        maxLength={max}
+                        required={key === 'name' && lang === 'ru'}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+          <button className={`${ui.link} self-start`} type="button" onClick={() => setTariffs([...form.tariffs, emptyTariff])}>
+            + Добавить тариф
+          </button>
         </div>
         <div className={ui.priceRow}>
           <label className={`${ui.field} w-40`}>
