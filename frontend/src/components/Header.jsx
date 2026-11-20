@@ -5,7 +5,7 @@ const texts = {
     hotel: 'гостиница',
     name: 'МЕЧТА',
     org: ['Государственное предприятие', '«Белаэронавигация»', 'Брестский филиал'],
-    nav: ['Главная', 'Номера', 'Контакты'],
+    nav: ['Номера', 'Контакты'],
     choose: 'К выбору!',
     menu: 'Меню',
   },
@@ -13,7 +13,7 @@ const texts = {
     hotel: 'hotel',
     name: 'MECHTA',
     org: ['State Enterprise', '«Belaeronavigatsia»', 'Brest Branch'],
-    nav: ['Home', 'Rooms', 'Contacts'],
+    nav: ['Rooms', 'Contacts'],
     choose: 'Choose!',
     menu: 'Menu',
   },
@@ -21,7 +21,7 @@ const texts = {
     hotel: 'гасцініца',
     name: 'МЕЧТА',
     org: ['Дзяржаўнае прадпрыемства', '«Белаэранавігацыя»', 'Брэсцкі філіял'],
-    nav: ['Галоўная', 'Нумары', 'Кантакты'],
+    nav: ['Нумары', 'Кантакты'],
     choose: 'Да выбару!',
     menu: 'Меню',
   },
@@ -39,7 +39,7 @@ const switchTitle = {
 // Поменяйте число после замены логотипа, чтобы браузер не показывал старый
 const LOGO_VERSION = 2;
 
-const navLinks = ['/#home', '/rooms', '/contacts'];
+const navLinks = ['/rooms', '/contacts'];
 
 const burgerLine = 'block h-0.5 rounded-[1px] bg-navy transition-[translate,rotate,opacity] duration-200';
 
