@@ -2,6 +2,15 @@
 @import './theme.css';
 
 @layer base {
+  /* Высота закреплённой шапки, точное значение ставит Header.jsx */
+  :root {
+    --header-h: 121px;
+  }
+
+  html {
+    scroll-padding-top: var(--header-h);
+  }
+
   body {
     line-height: normal;
   }

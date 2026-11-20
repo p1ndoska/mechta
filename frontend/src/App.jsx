@@ -43,8 +43,9 @@ function Site() {
   // Подвал прижат к низу экрана даже на коротких страницах
   return (
     <div className="flex min-h-dvh flex-col">
+      <Header lang={lang} setLang={setLang} />
       <div className="flex-1">
-        <Page lang={lang} setLang={setLang} />
+        <Page lang={lang} />
       </div>
       <Footer lang={lang} />
       <CookieBanner lang={lang} onAccept={() => localStorage.setItem('lang', lang)} />
@@ -52,11 +53,10 @@ function Site() {
   );
 }
 
-function Page({ lang, setLang }) {
+function Page({ lang }) {
   if (roomId) {
     return (
       <main>
-        <Header lang={lang} setLang={setLang} />
         <RoomPage id={roomId} lang={lang} />
       </main>
     );
@@ -65,7 +65,6 @@ function Page({ lang, setLang }) {
   if (legalPage) {
     return (
       <main>
-        <Header lang={lang} setLang={setLang} />
         <LegalPage page={legalPage} lang={lang} />
       </main>
     );
@@ -74,7 +73,7 @@ function Page({ lang, setLang }) {
   if (isContactsPage) {
     return (
       <main>
-        <ContactsPage lang={lang} header={<Header lang={lang} setLang={setLang} />} />
+        <ContactsPage lang={lang} />
       </main>
     );
   }
@@ -82,7 +81,6 @@ function Page({ lang, setLang }) {
   if (isRoomsPage) {
     return (
       <main>
-        <Header lang={lang} setLang={setLang} />
         <RoomsPage lang={lang} />
       </main>
     );
@@ -90,8 +88,7 @@ function Page({ lang, setLang }) {
 
   return (
     <main>
-      <div className="flex min-h-dvh flex-col max-lg:min-h-0">
-        <Header lang={lang} setLang={setLang} />
+      <div className="flex min-h-[calc(100dvh-var(--header-h))] flex-col max-lg:min-h-0">
         <Hero lang={lang} />
       </div>
       <Ratings lang={lang} />

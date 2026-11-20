@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const texts = {
   ru: {
@@ -46,6 +46,7 @@ const burgerLine = 'block h-0.5 rounded-[1px] bg-navy transition-[translate,rota
 export default function Header({ lang, setLang }) {
   const t = texts[lang];
   const [menuOpen, setMenuOpen] = useState(false);
+  const ref = useRef(null);
   const closeMenu = () => setMenuOpen(false);
   const nextLang = languages[(languages.indexOf(lang) + 1) % languages.length];
 
@@ -61,8 +62,16 @@ export default function Header({ lang, setLang }) {
     };
   }, [menuOpen]);
 
+  // Высота шапки в --header-h: по ней считаются блоки «на высоту экрана» и прокрутка к якорям
+  useEffect(() => {
+    const el = ref.current;
+    const observer = new ResizeObserver(() => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header className="relative border-b border-line bg-white">
+    <header ref={ref} className="sticky top-0 z-40 border-b border-line bg-white">
       <div className="mx-auto box-content flex max-w-header items-center justify-between gap-6 px-6 py-[26px] max-lg:gap-3 max-lg:p-4 max-xs:gap-2 max-xs:p-3">
         <a href="/#home" className="mr-auto flex items-center gap-[18px] max-lg:min-w-0 max-lg:gap-2.5 max-xs:gap-2">
           <span className="flex flex-col items-center leading-none text-text">
